@@ -1,8 +1,9 @@
 import sqlite3
+import os
 from fastapi import FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-
 app = FastAPI()
 
 # Enable CORS so your frontend can communicate with it
@@ -30,6 +31,12 @@ def init_db():
     conn.close()
 
 init_db()
+
+app.mount("/static", StaticFiles(directory="."), name="static")
+
+@app.get("/")
+async def read_index():
+    return FileResponse("index.html")
 
 @app.post("/register")
 def register_user(username: str = Form(...), email: str = Form(...), pin: str = Form(...)):
@@ -97,6 +104,4 @@ def reset_pin(email: str = Form(...), code: str = Form(...), new_pin: str = Form
         return {"message": "PIN updated successfully! Please log in."}
     else:
         raise HTTPException(status_code=400, detail="User mapping update failed")
-@app.get("/")
-async def read_index():
-    return FileResponse("index.html")
+
