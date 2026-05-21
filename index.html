@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ffffff'/%3E%3Ccircle cx='25' cy='35' r='12' fill='%23000000'/%3E%3Ccircle cx='75' cy='35' r='12' fill='%23000000'/%3E%3Cpath d='M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z' fill='%23ffffff' stroke='%23000000' stroke-width='6'/%3E%3Cellipse cx='38' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Cellipse cx='62' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Ccircle cx='38' cy='46' r='2' fill='%23ffffff'/%3E%3Ccircle cx='62' cy='46' r='2' fill='%23ffffff'/%3E%3Cpath d='M44 58 Q 50 64 56 58' fill='none' stroke='%23000000' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75' fill='none' stroke='%23000000' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='44' cy='75' r='3.5' fill='%23000000'/%3E%3C/svg%3E">  
     <title>CJ M-BANKING Services</title>
@@ -128,7 +127,7 @@
             text-transform: uppercase;
             font-weight: 400;
             border-top: 1px solid #eee;
-            padding-top: 20px;
+A            padding-top: 20px;
             width: 100%;
             max-width: 400px;
             text-align: center;
@@ -178,7 +177,7 @@
 
         <div id="register-section" class="form-section">
             <h2>Create Account</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/create-account')">
+            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/register')">
                 <div class="input-group">
                     <label>account number:</label>
                     <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
@@ -281,5 +280,46 @@
     </script>
 
 
+This is my code. is tehre an issue with it. Only regarding the issue on the screen dont start rewritting yor own code
+<script>
+        // Simple function to toggle views back and forth smoothly
+        function switchForm(sectionId) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Handles backend interaction
+        async function handleFormSubmit(event, url) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+         console.log("FETCH URL:", url);            
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(data.message || data.Message || "Operation Successful!");
+                    event.target.reset(); // Wipes fields clean
+
+                    if (url.includes('register') || url.includes('reset-pin')) {
+                        switchForm('login-section'); // Send back to login upon success
+                    } else if (url.includes('forgot-pin')) {
+                        switchForm('reset-section'); // Auto go to reset input phase
+                    }
+ } else {
+                    alert("Error: " + (data.detail || "Something went wrong"));
+                }
+            } catch (error) {
+                alert("Could not connect to backend server. Ensure Uvicorn is running!");
+            }
+        }
+    </script>
 </body>
 </html>
