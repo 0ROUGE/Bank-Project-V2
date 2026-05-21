@@ -39,7 +39,7 @@ async def read_index():
     return FileResponse("index.html")
 
 @app.post("/register")
-def register_user(username: str = Form(...), email: str = Form(...), pin: str = Form(...)):
+async def register_user(username: str = Form(...), email: str = Form(...), pin: str = Form(...)):
     # 1. Enforce strict Kenyan bank account parameters (9 to 16 digits only)
     if not username.isdigit() or not (9 <= len(username) <= 16):
         raise HTTPException(
@@ -63,7 +63,7 @@ def register_user(username: str = Form(...), email: str = Form(...), pin: str = 
     return {"message": "REGISTRATION SUCCESSFUL✅"}
 
 @app.post("/login")
-def login_user(username: str = Form(...), pin: str = Form(...)):
+async def login_user(username: str = Form(...), pin: str = Form(...)):
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users WHERE username = ? AND pin = ?", (username, pin))
@@ -76,7 +76,7 @@ def login_user(username: str = Form(...), pin: str = Form(...)):
         raise HTTPException(status_code=400, detail="Invalid account number or PIN")
 
 @app.post("/forgot-pin")
-def forgot_pin(email: str = Form(...)):
+async def forgot_pin(email: str = Form(...)):
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
@@ -89,7 +89,7 @@ def forgot_pin(email: str = Form(...)):
         raise HTTPException(status_code=400, detail="Email address not found")
 
 @app.post("/reset-pin")
-def reset_pin(email: str = Form(...), code: str = Form(...), new_pin: str = Form(...)):
+async def reset_pin(email: str = Form(...), code: str = Form(...), new_pin: str = Form(...)):
     if code != "123456":
         raise HTTPException(status_code=400, detail="Invalid recovery code")
         
