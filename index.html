@@ -218,6 +218,8 @@ if (response.ok) {
     <div class="container">
         
         <div id="login-section" class="form-section active">
+
+<script>
          if (response.ok) {
             alert(data.message || data.Message || "Operation Successful!");
             
@@ -228,7 +230,9 @@ if (response.ok) {
             } else if(url.includes('forgot-pin')) {
                 switchForm('reset-section'); // auto go to reset input phase
             }
-        }   <h2>Secure Login</h2>
+        }
+</script>
+        <h2>Secure Login</h2>
             <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/login')">
                 <div class="input-group">
                     <label>account number:</label>
@@ -281,7 +285,8 @@ if (response.ok) {
             <div class="toggle-links">
                 <a onclick="switchForm('reset-section')">Already have a code?</a>
                 <a onclick="switchForm('login-section')">Back to Login</a>
-         if (response.ok) {
+         <script>   
+            if (response.ok) {
             alert(data.message || data.Message || "Operation Successful!");
             
             event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
@@ -291,7 +296,9 @@ if (response.ok) {
             } else if(url.includes('forgot-pin')) {
                 switchForm('reset-section'); // auto go to reset input phase
             }
-        }   </div>
+        }  
+        </scrpit>      
+      </div>
         </div>
 
         <div id="reset-section" class="form-section">
