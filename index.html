@@ -240,7 +240,7 @@
 
     <div class="brand-footer">save and invest with us</div>
 
-    <script>
+<script>
         // Simple function to toggle views back and forth smoothly
         function switchForm(sectionId) {
             document.querySelectorAll('.form-section').forEach(section => {
@@ -249,43 +249,37 @@
             document.getElementById(sectionId).classList.add('active');
         }
 
-        // Handles backend interaction without changing your endpoints data structure
+        // Handles backend interaction
         async function handleFormSubmit(event, url) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            
+
             try {
                 const response = await fetch(url, {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     alert(data.message || data.Message || "Operation Successful!");
-                    if(url.includes('register') || url.includes('reset-pin')) {
-                        switchForm('login-section'); // send back to login upon success
-                    } else if(url.includes('forgot-pin')) {
-                        switchForm('reset-section'); // auto go to reset input phase
-                    }
-         if (response.ok) {
-            alert(data.message || data.Message || "Operation Successful!");
-            
-            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+                    event.target.reset(); // Wipes fields clean
 
-            if(url.includes('register') || url.includes('reset-pin')) {
-                switchForm('login-section'); // send back to login upon success
-            } else if(url.includes('forgot-pin')) {
-                switchForm('reset-section'); // auto go to reset input phase
-            }
-        }       } else {
-                    alert("Error: " + (data.detail || "Something went wrong. Please switch screens or check inputs."));
+                    if (url.includes('register') || url.includes('reset-pin')) {
+                        switchForm('login-section'); // Send back to login upon success
+                    } else if (url.includes('forgot-pin')) {
+                        switchForm('reset-section'); // Auto go to reset input phase
+                    }
+                } else {
+                    alert("Error: " + (data.detail || "Something went wrong"));
                 }
             } catch (error) {
                 alert("Could not connect to backend server. Ensure Uvicorn is running!");
             }
         }
     </script>
+
+
 </body>
 </html>
