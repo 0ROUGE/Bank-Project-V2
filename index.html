@@ -159,7 +159,7 @@
         <div id="login-section" class="form-section active">
 
         <h2>Secure Login</h2>
-            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/login')">
+            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/login')">
                 <div class="input-group">
                     <label>account number:</label>
                     <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
@@ -178,7 +178,7 @@
 
         <div id="register-section" class="form-section">
             <h2>Create Account</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com')">
+            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/create-account')">
                 <div class="input-group">
                     <label>account number:</label>
                     <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
@@ -201,7 +201,7 @@
 
         <div id="forgot-section" class="form-section">
             <h2>Forgot PIN</h2>
-            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/forgot-pin')">
+            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/forgot-pin')">
                 <div class="input-group">
                     <label>enter your email:</label>
                     <input type="email" name="email" required>
@@ -216,7 +216,7 @@
 
         <div id="reset-section" class="form-section">
             <h2>Reset Your PIN</h2>
-            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/reset-pin')">
+            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/reset-pin')">
                 <div class="input-group">
                     <label>email:</label>
                     <input type="email" name="email" required>
