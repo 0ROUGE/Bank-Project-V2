@@ -1,6 +1,7 @@
 import sqlite3
 from fastapi import FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 app = FastAPI()
 
@@ -96,3 +97,6 @@ def reset_pin(email: str = Form(...), code: str = Form(...), new_pin: str = Form
         return {"message": "PIN updated successfully! Please log in."}
     else:
         raise HTTPException(status_code=400, detail="User mapping update failed")
+@app.get("/")
+async def read_index():
+    return FileResponse("index.html")
