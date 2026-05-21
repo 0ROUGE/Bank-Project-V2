@@ -1,55 +1,371 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bank Login UI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ffffff'/%3E%3Ccircle cx='25' cy='35' r='12' fill='%23000000'/%3E%3Ccircle cx='75' cy='35' r='12' fill='%23000000'/%3E%3Cpath d='M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z' fill='%23ffffff' stroke='%23000000' stroke-width='6'/%3E%3Cellipse cx='38' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Cellipse cx='62' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Ccircle cx='38' cy='46' r='2' fill='%23ffffff'/%3E%3Ccircle cx='62' cy='46' r='2' fill='%23ffffff'/%3E%3Cpath d='M44 58 Q 50 64 56 58' fill='none' stroke='%23000000' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75' fill='none' stroke='%23000000' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='44' cy='75' r='3.5' fill='%23000000'/%3E%3C/svg%3E">  
+    <title>CJ M-BANKING Services</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: #1e1e1e; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 300px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #2b2b2b; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #00e676; border: none; color: black; font-weight: bold; border-radius: 5px; cursor: pointer; }
-        #result { margin-top: 20px; padding: 10px; background: #2d2d2d; border-radius: 5px; font-family: monospace; white-space: pre-wrap; display: none; }
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* Top Branding Header */
+        .brand-header {
+            font-size: 28px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        /* Pandas-style Head Outline Table */
+        .pandas-table-outline {
+            width: 100%;
+if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }            max-width: 800px;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+        .pandas-table-outline th {
+            border-top: 2px solid #000000;
+            border-bottom: 1px solid #000000;
+            padding: 8px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 13px;
+            font-weight: bold;
+            text-align: left;
+            color: #555;
+        }
+        .pandas-table-outline td {
+            border-bottom: 2px solid #000000;
+            padding: 6px 8px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Container & Forms Layout */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            flex-grow: 1;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #000000;
+            padding: 8px 0;
+            font-size: 16px;
+            background: transparent;
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }   outline: none;
+        }
+        .if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }hint {
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }   font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+        }
+        button {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: opacity 0.2s;
+        }if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        
+        /* Navigation Links options */
+        .toggle-links {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .toggle-links a {
+            color: #666;
+            text-decoration: underline;
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }   cursor: pointer;
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        /* Footer Branding */
+        .brand-footer {
+            margin-top: 60px;
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 400;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="login-box">
-    <h2>Bank Login</h2>
-    <input type="text" id="account" placeholder="Account Number (e.g., 1001)">
-    <input type="password" id="pin" placeholder="PIN (e.g., 1112)">
-    <button onclick="login()">Access Account</button>
-    <div id="result"></div>
-</div>
+    <div class="brand-header">CJ M-BANKING Services</div>
 
-<script>
-async function login() {
-    const account = document.getElementById('account').value;
-    const pin = document.getElementById('pin').value;
-    const resultDiv = document.getElementById('result');
-    
-    resultDiv.style.display = "block";
-    resultDiv.innerText = "Connecting to backend...";
+<div style="text-align: center; margin: 20px 0 40px 0;">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
+            <circle cx="25" cy="35" r="12" fill="#000000"/>
+            <circle cx="75" cy="35" r="12" fill="#000000"/>
+            <path d="M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z" fill="#ffffff" stroke="#000000" stroke-width="6"/>
+            <ellipse cx="38" cy="46" rx="7" ry="9" fill="#000000"/>
+            <ellipse cx="62" cy="46" rx="7" ry="9" fill="#000000"/>
+            <circle cx="38" cy="46" r="2" fill="#ffffff"/>
+            <circle cx="62" cy="46" r="2" fill="#ffffff"/>
+            <path d="M44 58 Q 50 64 56 58" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
+            <path d="M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="44" cy="75" r="3.5" fill="#000000"/>
+        </svg>
+    </div>
 
-    try {
-        // This line makes a live network call to your FastAPI backend!
-        const response = await fetch(`/view_account?account_number=${account}&Pin=${pin}`);
-        const data = await response.json();
+    <div class="container">
+        
+        <div id="login-section" class="form-section active">
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
 
-        if (response.ok) {
-            // Success! Beautifully format the bank data on screen
-            resultDiv.style.color = "#00e676";
-            resultDiv.innerText = JSON.stringify(data, null, 2);
-        } else {
-            // Error handling (Wrong PIN or Account numbers)
-            resultDiv.style.color = "#ff5252";
-            resultDiv.innerText = `Error: ${data.detail}`;
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }   <h2>Secure Login</h2>
+            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/login')">
+                <div class="input-group">
+                    <label>account number:</label>
+                    <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
+                </div>
+                <div class="input-group">
+                    <label>pin:</label>
+                    <input type="password" name="pin" maxlength="4" required>
+                </div>
+                <button type="submit">Log In</button>
+            </form>
+            <div class="toggle-links">
+                <a onclick="switchForm('forgot-section')">Forgot PIN?</a>
+                <a onclick="switchForm('register-section')">Create Account</a>
+            </div>
+        </div>
+
+        <div id="register-section" class="form-section">
+            <h2>Create Account</h2>
+            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/register')">
+                <div class="input-group">
+                    <label>account number:</label>
+                    <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
+                </div>
+                <div class="input-group">
+                    <label>email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label>pin:</label>
+                    <input type="password" name="pin" maxlength="4" required>
+                    <div class="hint">4 digits</div>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+            <div class="toggle-links">
+                <a onclick="switchForm('login-section')">Back to Login</a>
+            </div>
+        </div>
+
+        <div id="forgot-section" class="form-section">
+            <h2>Forgot PIN</h2>
+            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/forgot-pin')">
+                <div class="input-group">
+                    <label>enter your email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <button type="submit">Send Recovery Code</button>
+            </form>
+            <div class="toggle-links">
+                <a onclick="switchForm('reset-section')">Already have a code?</a>
+                <a onclick="switchForm('login-section')">Back to Login</a>
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }   </div>
+        </div>
+
+        <div id="reset-section" class="form-section">
+            <h2>Reset Your PIN</h2>
+            <form onsubmit="handleFormSubmit(event, 'http://127.0.0.1:8000/reset-pin')">
+                <div class="input-group">
+                    <label>email:</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="input-group">
+                    <label>6-digit recovery code:</label>
+                    <input type="text" name="code" required>
+                </div>
+                <div class="input-group">
+                    <label>new 4-digit pin:</label>
+                    <input type="password" name="new_pin" maxlength="4" required>
+                </div>
+                <button type="submit">Update PIN</button>
+            </form>
+            <div class="toggle-links">
+                <a onclick="switchForm('login-section')">Back to Login</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="brand-footer">save and invest with us</div>
+
+    <script>
+        // Simple function to toggle views back and forth smoothly
+        function switchForm(sectionId) {
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
         }
-    } catch (error) {
-        resultDiv.style.color = "#ff5252";
-        resultDiv.innerText = "Cannot connect to backend server. Is Uvicorn running?";
-    }
-}
-</script>
 
+        // Handles backend interaction without changing your endpoints data structure
+        async function handleFormSubmit(event, url) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message || data.Message || "Operation Successful!");
+                    if(url.includes('register') || url.includes('reset-pin')) {
+                        switchForm('login-section'); // send back to login upon success
+                    } else if(url.includes('forgot-pin')) {
+                        switchForm('reset-section'); // auto go to reset input phase
+                    }
+         if (response.ok) {
+            alert(data.message || data.Message || "Operation Successful!");
+            
+            event.target.reset(); // <-- 1. THIS WIPES ALL FIELDS CLEAN INSTANTLY!
+
+            if(url.includes('register') || url.includes('reset-pin')) {
+                switchForm('login-section'); // send back to login upon success
+            } else if(url.includes('forgot-pin')) {
+                switchForm('reset-section'); // auto go to reset input phase
+            }
+        }       } else {
+                    alert("Error: " + (data.detail || "Something went wrong. Please switch screens or check inputs."));
+                }
+            } catch (error) {
+                alert("Could not connect to backend server. Ensure Uvicorn is running!");
+            }
+        }
+    </script>
 </body>
 </html>
-
