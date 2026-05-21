@@ -38,7 +38,7 @@ app.mount("/static", StaticFiles(directory="."), name="static")
 async def read_index():
     return FileResponse("index.html")
 
-@app.post("/register")
+@app.post("/create-account'")
 async def register_user(username: str = Form(...), email: str = Form(...), pin: str = Form(...)):
     # 1. Enforce strict Kenyan bank account parameters (9 to 16 digits only)
     if not username.isdigit() or not (9 <= len(username) <= 16):

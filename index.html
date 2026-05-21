@@ -177,7 +177,7 @@ A            padding-top: 20px;
 
         <div id="register-section" class="form-section">
             <h2>Create Account</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/register')">
+            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/create-account')">
                 <div class="input-group">
                     <label>account number:</label>
                     <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
@@ -200,7 +200,7 @@ A            padding-top: 20px;
 
         <div id="forgot-section" class="form-section">
             <h2>Forgot PIN</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/forgot-pin')">
+            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/forgot-pin')">
                 <div class="input-group">
                     <label>enter your email:</label>
                     <input type="email" name="email" required>
@@ -215,7 +215,7 @@ A            padding-top: 20px;
 
         <div id="reset-section" class="form-section">
             <h2>Reset Your PIN</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/reset-pin')">
+            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/reset-pin')">
                 <div class="input-group">
                     <label>email:</label>
                     <input type="email" name="email" required>
