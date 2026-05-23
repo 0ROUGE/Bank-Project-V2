@@ -158,14 +158,14 @@ A            padding-top: 20px;
         <div id="login-section" class="form-section active">
 
         <h2>Secure Login</h2>
-            <form onsubmit="handleFormSubmit(event, 'https://bank-project-v2.onrender.com/login')">
+            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/login')">
                 <div class="input-group">
                     <label>account number:</label>
                     <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
                 </div>
                 <div class="input-group">
-                    <label>pin:</label>
-                    <input type="password" name="pin" maxlength="4" required>
+                     <label>Password:</label>
+                    <input type="password" name="pin" maxlength="10" required>
                 </div>
                 <button type="submit">Log In</button>
             </form>
@@ -187,9 +187,9 @@ A            padding-top: 20px;
                     <input type="email" name="email" required>
                 </div>
                 <div class="input-group">
-                    <label>pin:</label>
-                    <input type="password" name="pin" maxlength="4" required>
-                    <div class="hint">4 digits</div>
+                    <label>password</label>
+                    <input type="password" name="password" maxlength="4" required>
+                    <div class="hint">Characters</div>
                 </div>
                 <button type="submit">Sign Up</button>
             </form>
@@ -199,7 +199,7 @@ A            padding-top: 20px;
         </div>
 
         <div id="forgot-section" class="form-section">
-            <h2>Forgot PIN</h2>
+            <h2>Forgot Password</h2>
             <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/forgot-pin')">
                 <div class="input-group">
                     <label>enter your email:</label>
@@ -214,7 +214,7 @@ A            padding-top: 20px;
         </div>
 
         <div id="reset-section" class="form-section">
-            <h2>Reset Your PIN</h2>
+            <h2>Reset Your Password</h2>
             <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/reset-pin')">
                 <div class="input-group">
                     <label>email:</label>
@@ -225,10 +225,10 @@ A            padding-top: 20px;
                     <input type="text" name="code" required>
                 </div>
                 <div class="input-group">
-                    <label>new 4-digit pin:</label>
-                    <input type="password" name="new_pin" maxlength="4" required>
+                    <label>new password:</label>
+                    <input type="password" name="new_password" maxlength="10" required>
                 </div>
-                <button type="submit">Update PIN</button>
+                <button type="submit">Update Paaword</button>
             </form>
             <div class="toggle-links">
                 <a onclick="switchForm('login-section')">Back to Login</a>
