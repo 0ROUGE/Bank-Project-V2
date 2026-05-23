@@ -1,325 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>    <meta charset="UTF-8">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23ffffff'/%3E%3Ccircle cx='25' cy='35' r='12' fill='%23000000'/%3E%3Ccircle cx='75' cy='35' r='12' fill='%23000000'/%3E%3Cpath d='M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z' fill='%23ffffff' stroke='%23000000' stroke-width='6'/%3E%3Cellipse cx='38' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Cellipse cx='62' cy='46' rx='7' ry='9' fill='%23000000'/%3E%3Ccircle cx='38' cy='46' r='2' fill='%23ffffff'/%3E%3Ccircle cx='62' cy='46' r='2' fill='%23ffffff'/%3E%3Cpath d='M44 58 Q 50 64 56 58' fill='none' stroke='%23000000' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75' fill='none' stroke='%23000000' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='44' cy='75' r='3.5' fill='%23000000'/%3E%3C/svg%3E">  
-    <title>CJ M-BANKING Services</title>
+    <title>CJ M-BANKING</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f5f0;
+            --green: #1a5c3a;
+            --green-light: #22c55e;
+            --red: #c0392b;
+            --red-light: #ef4444;
+            --grey: #888;
+            --grey-light: #d4d4d0;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            background-color: #ffffff;
-            color: #000000;
-            margin: 0;
-            padding: 40px 20px;
+            background-color: var(--white);
+            color: var(--black);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            overflow-x: hidden;
         }
-        /* Top Branding Header */
-        .brand-header {
-            font-size: 28px;
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 14px 20px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            font-family: 'Outfit', sans-serif;
             font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: var(--black); color: var(--green-light); border-left: 3px solid var(--green-light); }
+        .toast.error { background: var(--black); color: var(--red-light); border-left: 3px solid var(--red-light); }
+        .toast.info { background: var(--black); color: var(--white); border-left: 3px solid var(--grey); }
+        .brand-header {
+            width: 100%;
+            padding: 28px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--grey-light);
+        }
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
-        /* Pandas-style Head Outline Table */
-        .pandas-table-outline {
-            width: 100%;
-            max-width: 800px;
-            border-collapse: collapse;
-            margin-bottom: 40px;
+        .brand-tag {
+            font-size: 10px;
+            color: var(--grey);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
         }
-        .pandas-table-outline th {
-            border-top: 2px solid #000000;
-            border-bottom: 1px solid #000000;
-            padding: 8px;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 13px;
-            font-weight: bold;
-            text-align: left;
-            color: #555;
+        .logo-wrap {
+            padding: 40px 0 30px;
         }
-        .pandas-table-outline td {
-            border-bottom: 2px solid #000000;
-            padding: 6px 8px;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 12px;
-            color: #888;
+        .logo-wrap svg {
+            animation: floatLogo 4s ease-in-out infinite;
         }
-
-        /* Container & Forms Layout */
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
         .container {
             width: 100%;
-            max-width: 400px;
-            flex-grow: 1;
+            max-width: 420px;
+            padding: 0 24px 60px;
         }
         .form-section {
             display: none;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .form-section.active {
-            display: block;
+        .form-section.active { display: block; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
-        h2 {
-            font-size: 24px;
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
             font-weight: 300;
-            margin-bottom: 30px;
+            margin-bottom: 6px;
+            line-height: 1.1;
+            letter-spacing: 1px;
+        }
+        .section-title em {
+            font-style: italic;
+            font-weight: 300;
+            color: #444;
+        }
+        .section-sub {
+            font-size: 12px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            font-weight: 300;
         }
         .input-group {
-            margin-bottom: 25px;
+            position: relative;
+            margin-bottom: 32px;
         }
-        label {
-            display: block;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 11px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all 0.25s ease;
+            pointer-events: none;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
         }
-        input {
+        .input-group input:focus ~ label,
+        .input-group input:not(:placeholder-shown) ~ label {
+            top: -16px;
+            font-size: 9px;
+            color: var(--black);
+            letter-spacing: 3px;
+        }
+        .input-group input {
             width: 100%;
             border: none;
-            border-bottom: 1px solid #000000;
-            padding: 8px 0;
+            border-bottom: 1px solid var(--grey-light);
+            padding: 10px 32px 10px 0;
             font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
             background: transparent;
-           outline: none;
-       
-           font-size: 11px;
-            color: #999;
-            margin-top: 5px;
+            outline: none;
+            color: var(--black);
+            transition: border-color 0.3s ease;
         }
-        button {
-            width: 100%;
-            background-color: #000000;
-            color: #ffffff;
-            border: none;
-            padding: 15px;
+        .input-group input::placeholder { color: transparent; }
+        .input-group input:focus { border-bottom-color: var(--black); }
+        .input-group input.error-field { border-bottom-color: var(--red-light); }
+        .input-group input.valid-field { border-bottom-color: var(--green-light); }
+        .input-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--black);
+            transition: width 0.3s ease;
+        }
+        .input-group:focus-within::after { width: 100%; }
+        .input-group .check {
+            position: absolute;
+            right: 0;
+            top: 10px;
             font-size: 14px;
+            color: var(--green-light);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .input-group input.valid-field ~ .check { opacity: 1; }
+        .input-group .eye-toggle {
+            position: absolute;
+            right: 0;
+            top: 10px;
             cursor: pointer;
+            font-size: 14px;
+            color: var(--grey);
+            user-select: none;
+            transition: color 0.2s;
+        }
+        .input-group .eye-toggle:hover { color: var(--black); }
+        .field-error {
+            font-size: 10px;
+            color: var(--red-light);
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 300;
+        }
+        .field-error.show { display: block; }
+        .strength-bar {
+            height: 1px;
+            background: var(--grey-light);
             margin-top: 10px;
-            transition: opacity 0.2s;
+            overflow: hidden;
         }
-        button:hover {
-            opacity: 0.8;
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease, background 0.3s ease;
         }
-        
-        /* Navigation Links options */
-        .toggle-links {
-            margin-top: 20px;
-            font-size: 13px;
+        .strength-label {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--grey);
+            margin-top: 4px;
+            font-weight: 300;
         }
-        .toggle-links a {
-            color: #666;
+        .terms-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 28px;
+            cursor: pointer;
+        }
+        .custom-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--grey-light);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            margin-top: 2px;
+        }
+        .custom-checkbox.checked {
+            background: var(--black);
+            border-color: var(--black);
+        }
+        .custom-checkbox svg {
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .custom-checkbox.checked svg {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .terms-text {
+            font-size: 12px;
+            color: var(--grey);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        .terms-text a {
+            color: var(--black);
             text-decoration: underline;
             cursor: pointer;
-            display: inline-block;
-            margin-right: 15px;
         }
-
-        /* Footer Branding */
-        .brand-footer {
-            margin-top: 60px;
-            font-size: 14px;
+        #terms-checkbox { display: none; }
+        .btn {
+            width: 100%;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 18px;
+            font-size: 11px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
             letter-spacing: 3px;
             text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: opacity 0.2s ease, background 0.3s ease;
+        }
+        .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .btn:not(:disabled):hover { opacity: 0.8; }
+        .btn.loading .btn-text { opacity: 0; }
+        .btn.loading .btn-dots { opacity: 1; }
+        .btn.success-state { background: var(--green); }
+        .btn-dots {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            display: flex;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+        .btn-dots span {
+            width: 4px;
+            height: 4px;
+            background: var(--white);
+            border-radius: 50%;
+            animation: dotPulse 1.2s ease-in-out infinite;
+        }
+        .btn-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .btn-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes dotPulse {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+        .toggle-links {
+            margin-top: 28px;
+            font-size: 11px;
+            color: var(--grey);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            letter-spacing: 1px;
+        }
+        .toggle-links a {
+            color: var(--grey);
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+            padding-bottom: 1px;
+        }
+        .toggle-links a:hover {
+            color: var(--black);
+            border-bottom-color: var(--black);
+        }
+        .timer-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .timer-circle-wrap {
+            position: relative;
+            width: 52px;
+            height: 52px;
+        }
+        .timer-circle-wrap svg { transform: rotate(-90deg); }
+        .timer-circle-bg { fill: none; stroke: var(--grey-light); stroke-width: 2; }
+        .timer-circle-fill {
+            fill: none;
+            stroke: var(--black);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-dasharray: 138;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+        }
+        .timer-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-family: 'Cormorant Garamond', serif;
             font-weight: 400;
-            border-top: 1px solid #eee;
-A            padding-top: 20px;
+        }
+        .timer-text {
+            font-size: 12px;
+            color: var(--grey);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+        .attempts-left {
+            font-size: 10px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            font-weight: 300;
+        }
+        .divider {
+            height: 1px;
+            background: var(--grey-light);
+            margin: 32px 0;
+        }
+        .brand-footer {
             width: 100%;
-            max-width: 400px;
             text-align: center;
+            padding: 28px;
+            font-size: 9px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--grey);
+            border-top: 1px solid var(--grey-light);
+            margin-top: auto;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+            font-size: 13px;
+            letter-spacing: 5px;
+        }
+        @media (max-width: 480px) {
+            .brand-header { padding: 20px 24px; }
+            .section-title { font-size: 34px; }
+            .toast { right: 12px; left: 12px; max-width: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="brand-header">CJ M-BANKING Services</div>
+<div class="toast" id="toast"></div>
 
-<div style="text-align: center; margin: 20px 0 40px 0;">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="120" height="120">
-            <circle cx="25" cy="35" r="12" fill="#000000"/>
-            <circle cx="75" cy="35" r="12" fill="#000000"/>
-            <path d="M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z" fill="#ffffff" stroke="#000000" stroke-width="6"/>
-            <ellipse cx="38" cy="46" rx="7" ry="9" fill="#000000"/>
-            <ellipse cx="62" cy="46" rx="7" ry="9" fill="#000000"/>
-            <circle cx="38" cy="46" r="2" fill="#ffffff"/>
-            <circle cx="62" cy="46" r="2" fill="#ffffff"/>
-            <path d="M44 58 Q 50 64 56 58" fill="none" stroke="#000000" stroke-width="4" stroke-linecap="round"/>
-            <path d="M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75" fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="44" cy="75" r="3.5" fill="#000000"/>
-        </svg>
+<header class="brand-header">
+    <div class="brand-name">CJ M-Banking</div>
+    <div class="brand-tag">Secure · Mobile · Smart</div>
+</header>
+
+<div class="logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="90" height="90">
+        <circle cx="25" cy="35" r="12" fill="#0a0a0a"/>
+        <circle cx="75" cy="35" r="12" fill="#0a0a0a"/>
+        <path d="M25 40 C 25 20, 75 20, 75 40 C 75 68, 25 68, 25 40 Z" fill="#f5f5f0" stroke="#0a0a0a" stroke-width="6"/>
+        <ellipse cx="38" cy="46" rx="7" ry="9" fill="#0a0a0a"/>
+        <ellipse cx="62" cy="46" rx="7" ry="9" fill="#0a0a0a"/>
+        <circle cx="38" cy="46" r="2" fill="#f5f5f0"/>
+        <circle cx="62" cy="46" r="2" fill="#f5f5f0"/>
+        <path d="M44 58 Q 50 64 56 58" fill="none" stroke="#0a0a0a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M21 40 A 6 8 0 0 0 21 54 L 21 62 Q 21 72 32 75 L 42 75" fill="none" stroke="#0a0a0a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="44" cy="75" r="3.5" fill="#0a0a0a"/>
+    </svg>
+</div>
+
+<div class="container">
+
+    <div id="login-section" class="form-section active">
+        <div class="section-title">Welcome<br><em>back.</em></div>
+        <div class="section-sub">Sign in to your account</div>
+        <form id="login-form" onsubmit="return handleLogin(event)">
+            <div class="input-group">
+                <input type="text" name="username" id="login-username" placeholder=" " required>
+                <label>Username</label>
+                <span class="check">✓</span>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" id="login-password" placeholder=" " required>
+                <label>Password</label>
+                <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
+            </div>
+            <button type="submit" class="btn" id="login-btn">
+                <span class="btn-text">Log In</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+        </form>
+        <div class="toggle-links">
+            <a onclick="switchForm('forgot-section')">Forgot password?</a>
+            <a onclick="switchForm('register-section')">Create account</a>
+        </div>
     </div>
 
-    <div class="container">
-        
-        <div id="login-section" class="form-section active">
-
-        <h2>Secure Login</h2>
-            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/login')">
-                <div class="input-group">
-                    <label>account number:</label>
-                    <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
-                </div>
-                <div class="input-group">
-                     <label>Password:</label>
-                    <input type="password" name="pin" maxlength="10" required>
-                </div>
-                <button type="submit">Log In</button>
-            </form>
-            <div class="toggle-links">
-                <a onclick="switchForm('forgot-section')">Forgot PIN?</a>
-                <a onclick="switchForm('register-section')">Create Account</a>
+    <div id="register-section" class="form-section">
+        <div class="section-title">Create<br><em>account.</em></div>
+        <div class="section-sub">Join CJ M-Banking today</div>
+        <form id="register-form" onsubmit="return handleRegister(event)">
+            <div class="input-group">
+                <input type="text" name="username" id="reg-username" placeholder=" " required>
+                <label>Username</label>
+                <span class="check">✓</span>
             </div>
-        </div>
-
-        <div id="register-section" class="form-section">
-            <h2>Create Account</h2>
-            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/create-account')">
-                <div class="input-group">
-                    <label>account number:</label>
-                    <input type="text" name="username" minlength="9" maxlength="16" pattern="[0-9]*" title="Please enter a valid Kenyan bank account number (9-16 digits)"required>
-                </div>
-                <div class="input-group">
-                    <label>email:</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="input-group">
-                    <label>password</label>
-                    <input type="password" name="password" maxlength="4" required>
-                    <div class="hint">Characters</div>
-                </div>
-                <button type="submit">Sign Up</button>
-            </form>
-            <div class="toggle-links">
-                <a onclick="switchForm('login-section')">Back to Login</a>
+            <div class="input-group">
+                <input type="email" name="email" id="reg-email" placeholder=" " required>
+                <label>Email address</label>
+                <span class="check">✓</span>
             </div>
-        </div>
-
-        <div id="forgot-section" class="form-section">
-            <h2>Forgot Password</h2>
-            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/forgot-pin')">
-                <div class="input-group">
-                    <label>enter your email:</label>
-                    <input type="email" name="email" required>
-                </div>
-                <button type="submit">Send Recovery Code</button>
-            </form>
-            <div class="toggle-links">
-                <a onclick="switchForm('reset-section')">Already have a code?</a>
-                <a onclick="switchForm('login-section')">Back to Login</a>
-      </div>
-        </div>
-
-        <div id="reset-section" class="form-section">
-            <h2>Reset Your Password</h2>
-            <form onsubmit="return handleFormSubmit(event, 'https://bank-project-v2.onrender.com/reset-pin')">
-                <div class="input-group">
-                    <label>email:</label>
-                    <input type="email" name="email" required>
-                </div>
-                <div class="input-group">
-                    <label>6-digit recovery code:</label>
-                    <input type="text" name="code" required>
-                </div>
-                <div class="input-group">
-                    <label>new password:</label>
-                    <input type="password" name="new_password" maxlength="10" required>
-                </div>
-                <button type="submit">Update Paaword</button>
-            </form>
-            <div class="toggle-links">
-                <a onclick="switchForm('login-section')">Back to Login</a>
+            <div class="input-group">
+                <input type="tel" name="phone" id="reg-phone" placeholder=" " required>
+                <label>Phone number</label>
+                <span class="check">✓</span>
+                <div class="field-error" id="phone-error">Enter a valid phone number (10-13 digits)</div>
             </div>
+            <div class="input-group">
+                <input type="password" name="password" id="reg-password" placeholder=" " required oninput="checkStrength(this.value)">
+                <label>Password</label>
+                <span class="eye-toggle" onclick="togglePassword('reg-password', this)">👁</span>
+                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                <div class="strength-label" id="strength-label"></div>
+            </div>
+            <div class="input-group">
+                <input type="password" name="confirm_password" id="reg-confirm" placeholder=" " required oninput="checkConfirm()">
+                <label>Confirm password</label>
+                <span class="eye-toggle" onclick="togglePassword('reg-confirm', this)">👁</span>
+                <div class="field-error" id="confirm-error">Passwords do not match</div>
+            </div>
+            <label class="terms-group" onclick="toggleTerms()">
+                <input type="checkbox" id="terms-checkbox" name="terms_accepted">
+                <div class="custom-checkbox" id="terms-box">
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="terms-text">
+                    I agree to the <a onclick="event.stopPropagation()">Terms and Conditions</a> and <a onclick="event.stopPropagation()">Privacy Policy</a>
+                </div>
+            </label>
+            <button type="submit" class="btn" id="register-btn">
+                <span class="btn-text">Create Account</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+        </form>
+        <div class="toggle-links">
+            <a onclick="switchForm('login-section')">Already have an account?</a>
         </div>
-
     </div>
 
-    <div class="brand-footer">save and invest with us</div>
+    <div id="forgot-section" class="form-section">
+        <div class="section-title">Forgot<br><em>password?</em></div>
+        <div class="section-sub">We will send a code to your email</div>
+        <form id="forgot-form" onsubmit="return handleForgot(event)">
+            <div class="input-group">
+                <input type="email" name="email" id="forgot-email" placeholder=" " required>
+                <label>Your email address</label>
+                <span class="check">✓</span>
+            </div>
+            <button type="submit" class="btn" id="forgot-btn">
+                <span class="btn-text">Send Recovery Code</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+        </form>
+        <div id="timer-section" style="display:none; margin-top:24px;">
+            <div class="divider"></div>
+            <div class="timer-wrap">
+                <div class="timer-circle-wrap">
+                    <svg width="52" height="52" viewBox="0 0 52 52">
+                        <circle class="timer-circle-bg" cx="26" cy="26" r="22"/>
+                        <circle class="timer-circle-fill" id="timer-circle" cx="26" cy="26" r="22"/>
+                    </svg>
+                    <div class="timer-number" id="timer-number">60</div>
+                </div>
+                <div class="timer-text">
+                    Code expires in <strong id="timer-display">60</strong> seconds.<br>
+                    Check your inbox and spam folder.
+                </div>
+            </div>
+            <div class="attempts-left" id="attempts-left">3 attempts remaining</div>
+            <button class="btn" id="resend-btn" onclick="handleResend()" disabled style="margin-top:16px;">
+                <span class="btn-text">Resend Code</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+            <div class="toggle-links" style="margin-top:16px;">
+                <a onclick="switchForm('reset-section')">I have a code</a>
+                <a href="mailto:support@cjmbanking.com">Contact support</a>
+            </div>
+        </div>
+        <div class="toggle-links" style="margin-top:20px;">
+            <a onclick="switchForm('login-section')">Back to login</a>
+        </div>
+    </div>
+
+    <div id="reset-section" class="form-section">
+        <div class="section-title">Reset<br><em>password.</em></div>
+        <div class="section-sub">Enter the code from your email</div>
+        <form id="reset-form" onsubmit="return handleReset(event)">
+            <div class="input-group">
+                <input type="email" name="email" id="reset-email" placeholder=" " required>
+                <label>Email address</label>
+                <span class="check">✓</span>
+            </div>
+            <div class="input-group">
+                <input type="text" name="code" id="reset-code" placeholder=" " maxlength="6" required>
+                <label>6-digit recovery code</label>
+                <span class="check">✓</span>
+            </div>
+            <div class="input-group">
+                <input type="password" name="new_password" id="reset-new-pass" placeholder=" " required>
+                <label>New password</label>
+                <span class="eye-toggle" onclick="togglePassword('reset-new-pass', this)">👁</span>
+            </div>
+            <div class="input-group">
+                <input type="password" name="confirm_new_password" id="reset-confirm" placeholder=" " required>
+                <label>Confirm new password</label>
+                <span class="eye-toggle" onclick="togglePassword('reset-confirm', this)">👁</span>
+                <div class="field-error" id="reset-confirm-error">Passwords do not match</div>
+            </div>
+            <button type="submit" class="btn" id="reset-btn">
+                <span class="btn-text">Update Password</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+        </form>
+        <div class="toggle-links">
+            <a onclick="switchForm('forgot-section')">Request new code</a>
+            <a onclick="switchForm('login-section')">Back to login</a>
+        </div>
+    </div>
+
+</div>
+
+<div class="brand-footer">Save &middot; Invest &middot; Grow &mdash; CJ M-Banking 2025</div>
 
 <script>
-        // Simple function to toggle views back and forth smoothly
-        function switchForm(sectionId) {
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
+    const BASE_URL = "https://bank-project-v2.onrender.com";
+
+    function showToast(message, type, duration) {
+        duration = duration || 4000;
+        var toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(function() { toast.className = 'toast'; }, duration);
+    }
+
+    function switchForm(sectionId) {
+        document.querySelectorAll('.form-section').forEach(function(s) {
+            s.classList.remove('active');
+        });
+        document.getElementById(sectionId).classList.add('active');
+        if (sectionId === 'reset-section') {
+            var forgotEmail = document.getElementById('forgot-email').value;
+            if (forgotEmail) document.getElementById('reset-email').value = forgotEmail;
         }
+        if (sectionId === 'forgot-section') {
+            var saved = localStorage.getItem('cj_user_email');
+            if (saved) document.getElementById('forgot-email').value = saved;
+        }
+    }
 
-        // Handles backend interaction
-        async function handleFormSubmit(event, url) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
+    function togglePassword(inputId, icon) {
+        var input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁';
+        }
+    }
 
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
+    function checkStrength(val) {
+        var fill = document.getElementById('strength-fill');
+        var label = document.getElementById('strength-label');
+        var strength = 0;
+        if (val.length >= 6) strength++;
+        if (val.length >= 10) strength++;
+        if (/[A-Z]/.test(val)) strength++;
+        if (/[0-9]/.test(val)) strength++;
+        if (/[^A-Za-z0-9]/.test(val)) strength++;
+        var levels = [
+            { pct: '0%', color: 'transparent', text: '' },
+            { pct: '25%', color: '#ef4444', text: 'Weak' },
+            { pct: '50%', color: '#f97316', text: 'Fair' },
+            { pct: '75%', color: '#eab308', text: 'Good' },
+            { pct: '100%', color: '#22c55e', text: 'Strong' }
+        ];
+        var lvl = Math.min(strength, 4);
+        fill.style.width = levels[lvl].pct;
+        fill.style.background = levels[lvl].color;
+        label.textContent = levels[lvl].text;
+        label.style.color = levels[lvl].color;
+    }
 
-                const data = await response.json();
+    function checkConfirm() {
+        var pass = document.getElementById('reg-password').value;
+        var confirm = document.getElementById('reg-confirm').value;
+        var err = document.getElementById('confirm-error');
+        var input = document.getElementById('reg-confirm');
+        if (confirm && pass !== confirm) {
+            err.classList.add('show');
+            input.classList.add('error-field');
+            input.classList.remove('valid-field');
+        } else if (confirm && pass === confirm) {
+            err.classList.remove('show');
+            input.classList.remove('error-field');
+            input.classList.add('valid-field');
+        }
+    }
 
-                if (response.ok) {
-                    alert(data.message || data.Message || "Operation Successful!");
-                    event.target.reset(); // Wipes fields clean
+    function toggleTerms() {
+        var box = document.getElementById('terms-box');
+        var checkbox = document.getElementById('terms-checkbox');
+        checkbox.checked = !checkbox.checked;
+        box.classList.toggle('checked', checkbox.checked);
+    }
 
-                    if (url.includes('register') || url.includes('reset-pin')) {
-                        switchForm('login-section'); // Send back to login upon success
-                    } else if (url.includes('forgot-pin')) {
-                        switchForm('reset-section'); // Auto go to reset input phase
-                    }
-                } else {
-                    alert("Error: " + (data.detail || "Something went wrong"));
-                }
-            } catch (error) {
-                alert("Could not connect to backend server. Ensure Uvicorn is running!");
+    function setLoading(btnId, loading) {
+        var btn = document.getElementById(btnId);
+        if (loading) {
+            btn.classList.add('loading');
+            btn.disabled = true;
+        } else {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }
+    }
+
+    function setSuccess(btnId, text) {
+        var btn = document.getElementById(btnId);
+        btn.classList.add('success-state');
+        btn.classList.remove('loading');
+        btn.querySelector('.btn-text').textContent = text;
+    }
+
+    var timerInterval = null;
+    var attemptsUsed = 0;
+
+    function startTimer() {
+        document.getElementById('timer-section').style.display = 'block';
+        var resendBtn = document.getElementById('resend-btn');
+        resendBtn.disabled = true;
+        var seconds = 60;
+        var circle = document.getElementById('timer-circle');
+        var numberEl = document.getElementById('timer-number');
+        var displayEl = document.getElementById('timer-display');
+        var circumference = 138;
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(function() {
+            seconds--;
+            numberEl.textContent = seconds;
+            displayEl.textContent = seconds;
+            var offset = circumference - (seconds / 60) * circumference;
+            circle.style.strokeDashoffset = offset;
+            if (seconds <= 10) circle.style.stroke = '#ef4444';
+            else circle.style.stroke = '#0a0a0a';
+            if (seconds <= 0) {
+                clearInterval(timerInterval);
+                numberEl.textContent = '0';
+                if (attemptsUsed < 3) resendBtn.disabled = false;
             }
+        }, 1000);
+    }
+
+    function updateAttempts() {
+        attemptsUsed++;
+        var remaining = 3 - attemptsUsed;
+        var el = document.getElementById('attempts-left');
+        var resendBtn = document.getElementById('resend-btn');
+        if (remaining <= 0) {
+            el.textContent = 'No attempts remaining. Please contact support.';
+            el.style.color = '#ef4444';
+            resendBtn.disabled = true;
+            resendBtn.querySelector('.btn-text').textContent = 'Contact Support';
+            resendBtn.onclick = function() {
+                window.location.href = 'mailto:support@cjmbanking.com';
+            };
+        } else {
+            el.textContent = remaining + ' attempt' + (remaining !== 1 ? 's' : '') + ' remaining';
         }
-    </script>
+    }
 
+    function markValid(inputId) {
+        var el = document.getElementById(inputId);
+        el.classList.add('valid-field');
+        el.classList.remove('error-field');
+    }
 
-This is my code. is tehre an issue with it. Only regarding the issue on the screen dont start rewritting yor own code
-<script>
-        // Simple function to toggle views back and forth smoothly
-        function switchForm(sectionId) {
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId).classList.add('active');
-        }
+    function markError(inputId) {
+        var el = document.getElementById(inputId);
+        el.classList.add('error-field');
+        el.classList.remove('valid-field');
+    }
 
-        // Handles backend interaction
-        async function handleFormSubmit(event, url) {
-            event.preventDefault();
-            const formData = new FormData(event.target);
-         console.log("FETCH URL:", url);            
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    alert(data.message || data.Message || "Operation Successful!");
-                    event.target.reset(); // Wipes fields clean
-
-                    if (url.includes('register') || url.includes('reset-pin')) {
-                        switchForm('login-section'); // Send back to login upon success
-                    } else if (url.includes('forgot-pin')) {
-                        switchForm('reset-section'); // Auto go to reset input phase
-                    }
- } else {
-                    alert("Error: " + (data.detail || "Something went wrong"));
-                }
-            } catch (error) {
-                alert("Could not connect to backend server. Ensure Uvicorn is running!");
+    async function handleLogin(event) {
+        event.preventDefault();
+        setLoading('login-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('cj_user', JSON.stringify(data.user));
+                localStorage.setItem('cj_user_email', data.user.email);
+                setSuccess('login-btn', 'Welcome back');
+                showToast('Welcome back, ' + data.user.username + '!', 'success');
+                setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
+            } else {
+                setLoading('login-btn', false);
+                showToast(data.detail || 'Login failed', 'error');
+                markError('login-username');
+                markError('login-password');
             }
+        } catch(err) {
+            setLoading('login-btn', false);
+            showToast('Cannot reach server. Check your connection.', 'error');
         }
-    </script>
+    }
+
+    async function handleRegister(event) {
+        event.preventDefault();
+        var pass = document.getElementById('reg-password').value;
+        var confirm = document.getElementById('reg-confirm').value;
+        var terms = document.getElementById('terms-checkbox').checked;
+        var phone = document.getElementById('reg-phone').value;
+        if (pass !== confirm) {
+            document.getElementById('confirm-error').classList.add('show');
+            markError('reg-confirm');
+            return;
+        }
+        if (!terms) {
+            showToast('Please accept the terms and conditions', 'error');
+            return;
+        }
+        if (!/^\d{10,13}$/.test(phone)) {
+            document.getElementById('phone-error').classList.add('show');
+            markError('reg-phone');
+            return;
+        }
+        setLoading('register-btn', true);
+        var formData = new FormData(event.target);
+        formData.set('terms_accepted', 'true');
+        try {
+            var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('register-btn', 'Account Created');
+                showToast('Account created! Please log in.', 'success');
+                setTimeout(function() {
+                    event.target.reset();
+                    document.getElementById('terms-box').classList.remove('checked');
+                    document.getElementById('register-btn').classList.remove('success-state');
+                    document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
+                    setLoading('register-btn', false);
+                    switchForm('login-section');
+                }, 1500);
+            } else {
+                setLoading('register-btn', false);
+                showToast(data.detail || 'Registration failed', 'error');
+            }
+        } catch(err) {
+            setLoading('register-btn', false);
+            showToast('Cannot reach server. Check your connection.', 'error');
+        }
+    }
+
+    async function handleForgot(event) {
+        event.preventDefault();
+        setLoading('forgot-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/forgot-password', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setLoading('forgot-btn', false);
+                showToast('Recovery code sent! Check your inbox.', 'success');
+                updateAttempts();
+                startTimer();
+            } else {
+                setLoading('forgot-btn', false);
+                showToast(data.detail || 'Email not found', 'error');
+            }
+        } catch(err) {
+            setLoading('forgot-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    async function handleResend() {
+        setLoading('resend-btn', true);
+        var email = document.getElementById('forgot-email').value;
+        var formData = new FormData();
+        formData.append('email', email);
+        try {
+            var response = await fetch(BASE_URL + '/resend-code', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setLoading('resend-btn', false);
+                showToast('New code sent to your email.', 'success');
+                updateAttempts();
+                startTimer();
+            } else {
+                setLoading('resend-btn', false);
+                showToast(data.detail || 'Could not resend', 'error');
+            }
+        } catch(err) {
+            setLoading('resend-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    async function handleReset(event) {
+        event.preventDefault();
+        var newPass = document.getElementById('reset-new-pass').value;
+        var confirm = document.getElementById('reset-confirm').value;
+        if (newPass !== confirm) {
+            document.getElementById('reset-confirm-error').classList.add('show');
+            markError('reset-confirm');
+            return;
+        }
+        setLoading('reset-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/reset-password', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('reset-btn', 'Password Updated');
+                showToast('Password updated! Please log in.', 'success');
+                setTimeout(function() {
+                    event.target.reset();
+                    document.getElementById('reset-btn').classList.remove('success-state');
+                    document.getElementById('reset-btn').querySelector('.btn-text').textContent = 'Update Password';
+                    setLoading('reset-btn', false);
+                    switchForm('login-section');
+                }, 1500);
+            } else {
+                setLoading('reset-btn', false);
+                showToast(data.detail || 'Reset failed', 'error');
+            }
+        } catch(err) {
+            setLoading('reset-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    document.querySelectorAll('input[type="email"]').forEach(function(input) {
+        input.addEventListener('input', function() {
+            if (input.validity.valid) markValid(input.id);
+            else input.classList.remove('valid-field', 'error-field');
+        });
+    });
+
+    document.getElementById('reg-phone').addEventListener('blur', function() {
+        var val = this.value;
+        if (/^\d{10,13}$/.test(val)) {
+            markValid('reg-phone');
+            document.getElementById('phone-error').classList.remove('show');
+        } else if (val) {
+            markError('reg-phone');
+            document.getElementById('phone-error').classList.add('show');
+        }
+    });
+
+    document.getElementById('reg-username').addEventListener('input', function() {
+        if (this.value.length >= 3) markValid('reg-username');
+    });
+
+    document.getElementById('login-username').addEventListener('input', function() {
+        this.classList.remove('error-field', 'valid-field');
+    });
+</script>
 </body>
 </html>
+
