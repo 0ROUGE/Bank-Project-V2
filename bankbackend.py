@@ -5,7 +5,6 @@ import string
 import smtplib
 import cloudinary
 import cloudinary.uploader
-import requests
 from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Form, HTTPException, UploadFile, File
@@ -547,10 +546,3 @@ async def get_profile(username: str):
         "photo_url": user[6],
         "balance": user[7]
     }
-def verify_recaptcha(token):
-    secret = "6LfCIf0sAAAAADfpOhaFMFnf9S-g0cnJVXcxdrLud"
-    response = requests.post(
-        'https://www.google.com/recaptcha/api/siteverify',
-        data={'secret': secret, 'response': token}
-    )
-    return response.json().get('success', False)
