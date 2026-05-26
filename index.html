@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CJ M-BANKING</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -437,6 +439,7 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
+            <div class="g-recaptcha" data-sitekey="6LfCIf0sAAAAAHOVRYIB0PQQJ-djQpZsHdpMvT1b" data-size="normal"></div>
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -492,6 +495,7 @@
                     I agree to the <a onclick="event.stopPropagation()">Terms and Conditions</a> and <a onclick="event.stopPropagation()">Privacy Policy</a>
                 </div>
             </label>
+             <div class="g-recaptcha" data-sitekey="6LfCIf0sAAAAAHOVRYIB0PQQJ-djQpZsHdpMvT1b" data-size="normal"></div>
             <button type="submit" class="btn" id="register-btn">
                 <span class="btn-text">Create Account</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
