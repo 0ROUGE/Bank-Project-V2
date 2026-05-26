@@ -2,3 +2,5 @@ fastapi==0.110.0
 uvicorn==0.28.0
 pydantic==2.6.4
 python-multipart
+python-jose==3.3.0
+cloudinary==1.36.0

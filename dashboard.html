@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CJ M-Banking | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #f5f5f0;
+            --green: #1a5c3a;
+            --green-light: #22c55e;
+            --red: #c0392b;
+            --red-light: #ef4444;
+            --grey: #888;
+            --grey-light: #d4d4d0;
+            --card-bg: #ffffff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--white);
+            color: var(--black);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* OVERLAY */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .overlay.show { opacity: 1; pointer-events: all; }
+
+        /* SIDE MENU */
+        .side-menu {
+            position: fixed;
+            top: 0; left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--black);
+            color: var(--white);
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            overflow-y: auto;
+        }
+        .side-menu.open { transform: translateX(0); }
+        .menu-header {
+            padding: 48px 28px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .menu-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .menu-tagline {
+            font-size: 10px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .menu-nav {
+            padding: 24px 0;
+            flex: 1;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 28px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border: none;
+            background: none;
+            color: var(--white);
+            width: 100%;
+            text-align: left;
+        }
+        .menu-item:hover { background: rgba(255,255,255,0.05); }
+        .menu-item.active { background: rgba(255,255,255,0.1); color: var(--green-light); }
+        .menu-icon { font-size: 18px; width: 24px; text-align: center; }
+        .menu-footer {
+            padding: 24px 28px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        .menu-logout {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: var(--red-light);
+            background: none;
+            border: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--grey-light);
+            background: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 4px;
+        }
+        .menu-btn span {
+            display: block;
+            width: 24px;
+            height: 1.5px;
+            background: var(--black);
+            transition: all 0.3s ease;
+        }
+        .topbar-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .notif-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+        }
+        .notif-dot {
+            position: absolute;
+            top: 0; right: 0;
+            width: 8px; height: 8px;
+            background: var(--green-light);
+            border-radius: 50%;
+        }
+
+        /* MAIN CONTENT */
+        .main {
+            padding: 0 0 80px;
+        }
+
+        /* PROFILE SECTION */
+        .profile-section {
+            padding: 32px 24px 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--grey-light);
+        }
+        .profile-photo-wrap {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .profile-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--black);
+            background: var(--grey-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            overflow: hidden;
+        }
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .photo-edit-btn {
+            position: absolute;
+            bottom: 0; right: 0;
+            width: 26px; height: 26px;
+            background: var(--black);
+            border-radius: 50%;
+            border: 2px solid var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .profile-info { flex: 1; }
+        .profile-greeting {
+            font-size: 11px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .profile-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        .profile-bio {
+            font-size: 12px;
+            color: var(--grey);
+            line-height: 1.5;
+        }
+        .profile-edit-btn {
+            background: none;
+            border: 1px solid var(--grey-light);
+            padding: 6px 14px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+        .profile-edit-btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+        /* WALLET CARD */
+        .wallet-section { padding: 24px; }
+        .section-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--grey);
+            margin-bottom: 16px;
+        }
+        .wallet-card {
+            background: var(--black);
+            color: var(--white);
+            border-radius: 16px;
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: -40px;
+            width: 160px; height: 160px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .wallet-card::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; right: -20px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .wallet-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        .wallet-balance {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 42px;
+            font-weight: 300;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+        .wallet-currency {
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 2px;
+        }
+        .wallet-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .wallet-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--white);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+        .wallet-btn:hover { background: rgba(255,255,255,0.2); }
+        .wallet-btn.deposit { background: rgba(34,197,94,0.2); color: var(--green-light); }
+        .wallet-btn.withdraw { background: rgba(239,68,68,0.15); color: var(--red-light); }
+
+        /* QUICK STATS */
+        .stats-section { padding: 0 24px 24px; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--grey-light);
+            border-radius: 12px;
+            padding: 18px;
+        }
+        .stat-icon { font-size: 20px; margin-bottom: 8px; }
+        .stat-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 10px;
+            color: var(--grey);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* TRANSACTIONS */
+        .transactions-section { padding: 0 24px 24px; }
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .see-all {
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--grey);
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: 'Outfit', sans-serif;
+        }
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--grey-light);
+        }
+        .transaction-item:last-child { border-bottom: none; }
+        .txn-left { display: flex; align-items: center; gap: 14px; }
+        .txn-icon {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .txn-icon.deposit { background: rgba(34,197,94,0.1); }
+        .txn-icon.withdrawal { background: rgba(239,68,68,0.1); }
+        .txn-desc { font-size: 13px; margin-bottom: 3px; }
+        .txn-date { font-size: 10px; color: var(--grey); letter-spacing: 1px; }
+        .txn-amount { font-size: 15px; font-weight: 400; }
+        .txn-amount.deposit { color: var(--green-light); }
+        .txn-amount.withdrawal { color: var(--red-light); }
+        .no-transactions {
+            text-align: center;
+            padding: 32px 0;
+            color: var(--grey);
+            font-size: 13px;
+        }
+
+        /* ALLOWANCE SECTION */
+        .allowance-section { padding: 0 24px 24px; }
+        .allowance-card {
+            border: 1px solid var(--grey-light);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .allowance-info { }
+        .allowance-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            margin-bottom: 4px;
+        }
+        .allowance-label { font-size: 11px; color: var(--grey); letter-spacing: 1px; }
+        .allowance-set-btn {
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 10px 18px;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            border-radius: 8px;
+        }
+
+        /* MODALS */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 300;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .modal-backdrop.show { display: flex; }
+        .modal {
+            background: var(--white);
+            width: 100%;
+            max-width: 480px;
+            border-radius: 20px 20px 0 0;
+            padding: 32px 24px 48px;
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        .modal-handle {
+            width: 40px; height: 4px;
+            background: var(--grey-light);
+            border-radius: 2px;
+            margin: 0 auto 24px;
+        }
+        .modal-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            margin-bottom: 24px;
+        }
+        .modal-input-group { margin-bottom: 20px; }
+        .modal-label {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--grey);
+            margin-bottom: 8px;
+        }
+        .modal-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid var(--grey-light);
+            padding: 10px 0;
+            font-size: 16px;
+            font-family: 'Outfit', sans-serif;
+            background: transparent;
+            outline: none;
+            color: var(--black);
+        }
+        .modal-input:focus { border-bottom-color: var(--black); }
+        .modal-textarea {
+            width: 100%;
+            border: 1px solid var(--grey-light);
+            padding: 12px;
+            font-size: 14px;
+            font-family: 'Outfit', sans-serif;
+            background: transparent;
+            outline: none;
+            color: var(--black);
+            resize: none;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+        .modal-btn {
+            width: 100%;
+            background: var(--black);
+            color: var(--white);
+            border: none;
+            padding: 18px;
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            margin-top: 8px;
+            transition: opacity 0.2s;
+        }
+        .modal-btn:hover { opacity: 0.8; }
+        .modal-btn.loading { opacity: 0.5; pointer-events: none; }
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--grey);
+            margin-top: -8px;
+        }
+
+        /* PHOTO UPLOAD */
+        .photo-upload-area {
+            border: 2px dashed var(--grey-light);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .photo-upload-area:hover { border-color: var(--black); }
+        .photo-preview {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 12px;
+            display: none;
+        }
+        .upload-icon { font-size: 32px; margin-bottom: 8px; }
+        .upload-text { font-size: 12px; color: var(--grey); }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 24px; right: 24px;
+            padding: 14px 20px;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 300px;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { background: var(--black); color: var(--green-light); border-left: 3px solid var(--green-light); }
+        .toast.error { background: var(--black); color: var(--red-light); border-left: 3px solid var(--red-light); }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--grey-light);
+            display: flex;
+            z-index: 50;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            gap: 4px;
+            transition: color 0.2s;
+            color: var(--grey);
+        }
+        .nav-item.active { color: var(--black); }
+        .nav-icon { font-size: 20px; }
+        .nav-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<!-- SIDE MENU -->
+<nav class="side-menu" id="sideMenu">
+    <div class="menu-header">
+        <div class="menu-brand">CJ M-Banking</div>
+        <div class="menu-tagline">Secure · Mobile · Smart</div>
+    </div>
+    <div class="menu-nav">
+        <button class="menu-item active" onclick="closeMenu()">
+            <span class="menu-icon">🏠</span> Home
+        </button>
+        <button class="menu-item" onclick="openProfileModal(); closeMenu()">
+            <span class="menu-icon">👤</span> My Profile
+        </button>
+        <button class="menu-item" onclick="scrollToWallet(); closeMenu()">
+            <span class="menu-icon">💰</span> My Wallet
+        </button>
+        <button class="menu-item" onclick="scrollToTransactions(); closeMenu()">
+            <span class="menu-icon">📋</span> Transactions
+        </button>
+        <button class="menu-item" onclick="scrollToAllowance(); closeMenu()">
+            <span class="menu-icon">📅</span> Weekly Allowance
+        </button>
+        <button class="menu-item" onclick="closeMenu()">
+            <span class="menu-icon">🔔</span> Notifications
+        </button>
+        <button class="menu-item" onclick="closeMenu()">
+            <span class="menu-icon">⚙️</span> Settings
+        </button>
+    </div>
+    <div class="menu-footer">
+        <button class="menu-logout" onclick="logout()">
+            <span>🚪</span> Log Out
+        </button>
+    </div>
+</nav>
+
+<!-- TOP BAR -->
+<header class="topbar">
+    <button class="menu-btn" onclick="openMenu()">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-brand">CJ M-Banking</div>
+    <button class="notif-btn">
+        🔔
+        <span class="notif-dot"></span>
+    </button>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- PROFILE -->
+    <section class="profile-section">
+        <div class="profile-photo-wrap">
+            <div class="profile-photo" id="profilePhotoDisplay">👤</div>
+            <div class="photo-edit-btn" onclick="openProfileModal()">✏️</div>
+        </div>
+        <div class="profile-info">
+            <div class="profile-greeting">Good <span id="timeGreeting">morning</span></div>
+            <div class="profile-name" id="profileName">Loading...</div>
+            <div class="profile-bio" id="profileBio">Welcome to CJ M-Banking</div>
+            <button class="profile-edit-btn" onclick="openProfileModal()">Edit Profile</button>
+        </div>
+    </section>
+
+    <!-- WALLET -->
+    <section class="wallet-section" id="walletSection">
+        <div class="section-label">My Wallet</div>
+        <div class="wallet-card">
+            <div class="wallet-label">Available Balance</div>
+            <div class="wallet-balance" id="walletBalance">0.00</div>
+            <div class="wallet-currency">KES</div>
+            <div class="wallet-actions">
+                <button class="wallet-btn deposit" onclick="openDepositModal()">+ Deposit</button>
+                <button class="wallet-btn withdraw" onclick="openWithdrawModal()">- Withdraw</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value" id="totalDeposits">0</div>
+                <div class="stat-label">Total Deposits</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📉</div>
+                <div class="stat-value" id="totalWithdrawals">0</div>
+                <div class="stat-label">Withdrawals</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRANSACTIONS -->
+    <section class="transactions-section" id="transactionsSection">
+        <div class="section-header">
+            <div class="section-label" style="margin:0">Recent Transactions</div>
+            <button class="see-all">See All</button>
+        </div>
+        <div id="transactionsList">
+            <div class="no-transactions">No transactions yet</div>
+        </div>
+    </section>
+
+    <!-- ALLOWANCE -->
+    <section class="allowance-section" id="allowanceSection">
+        <div class="section-label">Weekly Allowance</div>
+        <div class="allowance-card">
+            <div class="allowance-info">
+                <div class="allowance-amount" id="allowanceAmount">Not set</div>
+                <div class="allowance-label" id="allowanceLabel">Set your weekly savings goal</div>
+            </div>
+            <button class="allowance-set-btn" onclick="openAllowanceModal()">Set</button>
+        </div>
+    </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <button class="nav-item active">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="scrollToWallet()">
+        <span class="nav-icon">💰</span>
+        <span class="nav-label">Wallet</span>
+    </button>
+    <button class="nav-item" onclick="scrollToTransactions()">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">History</span>
+    </button>
+    <button class="nav-item" onclick="openProfileModal()">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Profile</span>
+    </button>
+</nav>
+
+<!-- DEPOSIT MODAL -->
+<div class="modal-backdrop" id="depositModal">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModal('depositModal')">✕</button>
+        <div class="modal-title">Deposit Funds</div>
+        <div class="modal-input-group">
+            <label class="modal-label">Amount (KES)</label>
+            <input type="number" class="modal-input" id="depositAmount" placeholder="0.00" min="1">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Description</label>
+            <input type="text" class="modal-input" id="depositDesc" placeholder="e.g. Salary, Transfer...">
+        </div>
+        <button class="modal-btn" id="depositBtn" onclick="handleDeposit()">Deposit</button>
+    </div>
+</div>
+
+<!-- WITHDRAW MODAL -->
+<div class="modal-backdrop" id="withdrawModal">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModal('withdrawModal')">✕</button>
+        <div class="modal-title">Withdraw Funds</div>
+        <div class="modal-input-group">
+            <label class="modal-label">Amount (KES)</label>
+            <input type="number" class="modal-input" id="withdrawAmount" placeholder="0.00" min="1">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Description</label>
+            <input type="text" class="modal-input" id="withdrawDesc" placeholder="e.g. Rent, Shopping...">
+        </div>
+        <button class="modal-btn" id="withdrawBtn" onclick="handleWithdraw()">Withdraw</button>
+    </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-backdrop" id="profileModal">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModal('profileModal')">✕</button>
+        <div class="modal-title">Edit Profile</div>
+        <div class="photo-upload-area" onclick="document.getElementById('photoInput').click()">
+            <img id="photoPreview" class="photo-preview" src="" alt="">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Tap to upload photo</div>
+        </div>
+        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+        <div class="modal-input-group">
+            <label class="modal-label">Full Name</label>
+            <input type="text" class="modal-input" id="editFullName" placeholder="Your full name">
+        </div>
+        <div class="modal-input-group">
+            <label class="modal-label">Bio</label>
+            <textarea class="modal-textarea" id="editBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+        </div>
+        <button class="modal-btn" id="profileSaveBtn" onclick="handleProfileUpdate()">Save Profile</button>
+    </div>
+</div>
+
+<!-- ALLOWANCE MODAL -->
+<div class="modal-backdrop" id="allowanceModal">
+    <div class="modal">
+        <div class="modal-handle"></div>
+        <button class="modal-close" onclick="closeModal('allowanceModal')">✕</button>
+        <div class="modal-title">Weekly Allowance</div>
+        <div class="modal-input-group">
+            <label class="modal-label">Weekly Amount (KES)</label>
+            <input type="number" class="modal-input" id="allowanceInput" placeholder="e.g. 5000" min="1">
+        </div>
+        <button class="modal-btn" onclick="handleSetAllowance()">Set Allowance</button>
+    </div>
+</div>
+
+<script>
+    const BASE_URL = "https://bank-project-v2.onrender.com";
+
+    // ── INIT ──────────────────────────────────────────────────────────────────
+    const user = JSON.parse(localStorage.getItem('cj_user') || 'null');
+    if (!user) window.location.href = '/';
+
+    function init() {
+        setGreeting();
+        loadProfile();
+        loadTransactions();
+        loadAllowance();
+    }
+
+    function setGreeting() {
+        const hour = new Date().getHours();
+        const el = document.getElementById('timeGreeting');
+        if (hour < 12) el.textContent = 'morning';
+        else if (hour < 17) el.textContent = 'afternoon';
+        else el.textContent = 'evening';
+    }
+
+    // ── LOAD PROFILE ──────────────────────────────────────────────────────────
+    async function loadProfile() {
+        try {
+            const res = await fetch(BASE_URL + '/profile/' + user.username);
+            const data = await res.json();
+
+            const name = data.full_name || data.username;
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profileBio').textContent = data.bio || 'Welcome to CJ M-Banking';
+            document.getElementById('walletBalance').textContent = Number(data.balance).toLocaleString('en-KE', {minimumFractionDigits: 2});
+
+            if (data.photo_url) {
+                const photoEl = document.getElementById('profilePhotoDisplay');
+                photoEl.innerHTML = '<img src="' + data.photo_url + '" alt="Profile">';
+            }
+
+            localStorage.setItem('cj_user', JSON.stringify(data));
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    // ── LOAD TRANSACTIONS ─────────────────────────────────────────────────────
+    async function loadTransactions() {
+        try {
+            const res = await fetch(BASE_URL + '/transactions/' + user.username);
+            const data = await res.json();
+            const list = document.getElementById('transactionsList');
+
+            if (!data.transactions || data.transactions.length === 0) {
+                list.innerHTML = '<div class="no-transactions">No transactions yet</div>';
+                return;
+            }
+
+            let deposits = 0, withdrawals = 0;
+            let html = '';
+
+            data.transactions.forEach(function(txn) {
+                const isDeposit = txn.type === 'deposit';
+                if (isDeposit) deposits += txn.amount;
+                else withdrawals += txn.amount;
+
+                const date = new Date(txn.created_at).toLocaleDateString('en-KE', {
+                    day: 'numeric', month: 'short'
+                });
+
+                html += '<div class="transaction-item">' +
+                    '<div class="txn-left">' +
+                    '<div class="txn-icon ' + txn.type + '">' + (isDeposit ? '⬇️' : '⬆️') + '</div>' +
+                    '<div>' +
+                    '<div class="txn-desc">' + (txn.description || txn.type) + '</div>' +
+                    '<div class="txn-date">' + date + '</div>' +
+                    '</div></div>' +
+                    '<div class="txn-amount ' + txn.type + '">' + (isDeposit ? '+' : '-') + ' KES ' + Number(txn.amount).toLocaleString() + '</div>' +
+                    '</div>';
+            });
+
+            list.innerHTML = html;
+            document.getElementById('totalDeposits').textContent = 'KES ' + Number(deposits).toLocaleString();
+            document.getElementById('totalWithdrawals').textContent = 'KES ' + Number(withdrawals).toLocaleString();
+
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    // ── LOAD ALLOWANCE ────────────────────────────────────────────────────────
+    async function loadAllowance() {
+        try {
+            const res = await fetch(BASE_URL + '/allowance/' + user.username);
+            const data = await res.json();
+
+            if (data.allowance) {
+                document.getElementById('allowanceAmount').textContent = 'KES ' + Number(data.allowance.amount).toLocaleString();
+                const next = new Date(data.allowance.next_date).toLocaleDateString('en-KE', {
+                    day: 'numeric', month: 'short'
+                });
+                document.getElementById('allowanceLabel').textContent = 'Next: ' + next;
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+
+    // ── DEPOSIT ───────────────────────────────────────────────────────────────
+    function openDepositModal() {
+        document.getElementById('depositModal').classList.add('show');
+    }
+
+    async function handleDeposit() {
+        const amount = document.getElementById('depositAmount').value;
+        const desc = document.getElementById('depositDesc').value || 'Deposit';
+        if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+
+        const btn = document.getElementById('depositBtn');
+        btn.classList.add('loading');
+        btn.textContent = 'Processing...';
+
+        const form = new FormData();
+        form.append('username', user.username);
+        form.append('amount', amount);
+        form.append('description', desc);
+
+        try {
+            const res = await fetch(BASE_URL + '/deposit', { method: 'POST', body: form });
+            const data = await res.json();
+            if (res.ok) {
+                showToast('Deposit successful!', 'success');
+                document.getElementById('walletBalance').textContent = Number(data.new_balance).toLocaleString('en-KE', {minimumFractionDigits: 2});
+                closeModal('depositModal');
+                loadTransactions();
+                document.getElementById('depositAmount').value = '';
+                document.getElementById('depositDesc').value = '';
+            } else {
+                showToast(data.detail || 'Deposit failed', 'error');
+            }
+        } catch(e) {
+            showToast('Cannot reach server', 'error');
+        }
+
+        btn.classList.remove('loading');
+        btn.textContent = 'Deposit';
+    }
+
+    // ── WITHDRAW ──────────────────────────────────────────────────────────────
+    function openWithdrawModal() {
+        document.getElementById('withdrawModal').classList.add('show');
+    }
+
+    async function handleWithdraw() {
+        const amount = document.getElementById('withdrawAmount').value;
+        const desc = document.getElementById('withdrawDesc').value || 'Withdrawal';
+        if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+
+        const btn = document.getElementById('withdrawBtn');
+        btn.classList.add('loading');
+        btn.textContent = 'Processing...';
+
+        const form = new FormData();
+        form.append('username', user.username);
+        form.append('amount', amount);
+        form.append('description', desc);
+
+        try {
+            const res = await fetch(BASE_URL + '/withdraw', { method: 'POST', body: form });
+            const data = await res.json();
+            if (res.ok) {
+                showToast('Withdrawal successful!', 'success');
+                document.getElementById('walletBalance').textContent = Number(data.new_balance).toLocaleString('en-KE', {minimumFractionDigits: 2});
+                closeModal('withdrawModal');
+                loadTransactions();
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('withdrawDesc').value = '';
+            } else {
+                showToast(data.detail || 'Withdrawal failed', 'error');
+            }
+        } catch(e) {
+            showToast('Cannot reach server', 'error');
+        }
+
+        btn.classList.remove('loading');
+        btn.textContent = 'Withdraw';
+    }
+
+    // ── PROFILE UPDATE ────────────────────────────────────────────────────────
+    function openProfileModal() {
+        const u = JSON.parse(localStorage.getItem('cj_user') || '{}');
+        document.getElementById('editFullName').value = u.full_name || '';
+        document.getElementById('editBio').value = u.bio || '';
+        document.getElementById('profileModal').classList.add('show');
+    }
+
+    function previewPhoto(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('photoPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                document.querySelector('.upload-icon').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    async function handleProfileUpdate() {
+        const fullName = document.getElementById('editFullName').value;
+        const bio = document.getElementById('editBio').value;
+        const photoInput = document.getElementById('photoInput');
+
+        const btn = document.getElementById('profileSaveBtn');
+        btn.classList.add('loading');
+        btn.textContent = 'Saving...';
+
+        const form = new FormData();
+        form.append('username', user.username);
+        form.append('full_name', fullName);
+        form.append('bio', bio);
+        if (photoInput.files[0]) {
+            form.append('photo', photoInput.files[0]);
+        }
+
+        try {
+            const res = await fetch(BASE_URL + '/update-profile', { method: 'POST', body: form });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('cj_user', JSON.stringify(data.user));
+                showToast('Profile updated!', 'success');
+                closeModal('profileModal');
+                loadProfile();
+            } else {
+                showToast(data.detail || 'Update failed', 'error');
+            }
+        } catch(e) {
+            showToast('Cannot reach server', 'error');
+        }
+
+        btn.classList.remove('loading');
+        btn.textContent = 'Save Profile';
+    }
+
+    // ── ALLOWANCE ─────────────────────────────────────────────────────────────
+    function openAllowanceModal() {
+        document.getElementById('allowanceModal').classList.add('show');
+    }
+
+    async function handleSetAllowance() {
+        const amount = document.getElementById('allowanceInput').value;
+        if (!amount || amount <= 0) { showToast('Enter a valid amount', 'error'); return; }
+
+        const form = new FormData();
+        form.append('username', user.username);
+        form.append('amount', amount);
+        form.append('frequency', 'weekly');
+
+        try {
+            const res = await fetch(BASE_URL + '/set-allowance', { method: 'POST', body: form });
+            const data = await res.json();
+            if (res.ok) {
+                showToast(data.message, 'success');
+                closeModal('allowanceModal');
+                loadAllowance();
+            } else {
+                showToast(data.detail || 'Failed', 'error');
+            }
+        } catch(e) {
+            showToast('Cannot reach server', 'error');
+        }
+    }
+
+    // ── MENU ──────────────────────────────────────────────────────────────────
+    function openMenu() {
+        document.getElementById('sideMenu').classList.add('open');
+        document.getElementById('overlay').classList.add('show');
+    }
+
+    function closeMenu() {
+        document.getElementById('sideMenu').classList.remove('open');
+        document.getElementById('overlay').classList.remove('show');
+    }
+
+    // ── MODALS ────────────────────────────────────────────────────────────────
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('show');
+    }
+
+    document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+            if (e.target === el) el.classList.remove('show');
+        });
+    });
+
+    // ── SCROLL HELPERS ────────────────────────────────────────────────────────
+    function scrollToWallet() {
+        document.getElementById('walletSection').scrollIntoView({ behavior: 'smooth' });
+    }
+    function scrollToTransactions() {
+        document.getElementById('transactionsSection').scrollIntoView({ behavior: 'smooth' });
+    }
+    function scrollToAllowance() {
+        document.getElementById('allowanceSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ── LOGOUT ────────────────────────────────────────────────────────────────
+    function logout() {
+        localStorage.removeItem('cj_user');
+        localStorage.removeItem('cj_token');
+        localStorage.removeItem('cj_user_email');
+        window.location.href = '/';
+    }
+
+    // ── TOAST ─────────────────────────────────────────────────────────────────
+    function showToast(message, type) {
+        var toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(function() { toast.className = 'toast'; }, 4000);
+    }
+
+    // ── START ─────────────────────────────────────────────────────────────────
+    init();
+</script>
+</body>
+</html>
