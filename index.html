@@ -7,7 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+
     <style>
         :root {
             --black: #0a0a0a;
@@ -439,7 +440,9 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
-           <div class="g-recaptcha" data-sitekey="6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b" style="margin-bottom: 16px;"></div>
+
+             <div id="login-recaptcha" style="margin-bottom:16px;"></div>
+
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -553,8 +556,8 @@
         </label>
 
         <!-- RECAPTCHA -->
-        <div class="g-recaptcha" data-sitekey="6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b"
-             style="margin-bottom:16px;"></div>
+
+           <div id="register-recaptcha" style="margin-bottom:16px;"></div>
 
         <button type="submit" class="btn" id="register-btn">
             <span class="btn-text">Create Account</span>
@@ -757,6 +760,19 @@
 <script>
    const BASE_URL = "https://bank-project-v2.onrender.com";
 
+   let loginCaptchaId;
+let registerCaptchaId;
+
+function onloadCallback() {
+    loginCaptchaId = grecaptcha.render('login-recaptcha', {
+        sitekey: '6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b'
+    });
+
+    registerCaptchaId = grecaptcha.render('register-recaptcha', {
+        sitekey: '6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b'
+    });
+}
+
     function showToast(message, type, duration) {
         duration = duration || 4000;
         var toast = document.getElementById('toast');
@@ -918,11 +934,13 @@
 async function handleLogin(event) {
     event.preventDefault();
 
-    var recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-        showToast('Please complete the reCAPTCHA check.', 'error');
-        return;
-    }
+   if (typeof grecaptcha === 'undefined') {
+    showToast('reCAPTCHA failed to load.', 'error');
+    return;
+}
+
+var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
+
 
     setLoading('login-btn', true);
     var formData = new FormData(event.target);
@@ -943,30 +961,30 @@ async function handleLogin(event) {
         } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
             setLoading('login-btn', false);
             showToast('Please verify your email before logging in.', 'error');
-            grecaptcha.reset();
-
+            grecaptcha.reset(loginCaptchaId);
         } else {
             setLoading('login-btn', false);
             showToast(data.detail || 'Login failed', 'error');
             markError('login-username');
             markError('login-password');
-            grecaptcha.reset();
-        }
+            grecaptcha.reset(loginCaptchaId);        
+}
     } catch(err) {
         setLoading('login-btn', false);
         showToast('Cannot reach server. Check your connection.', 'error');
-        grecaptcha.reset();
-    }
+        grecaptcha.reset(loginCaptchaId);  
+  }
 }
 
 async function handleRegister(event) {
     event.preventDefault();
 
-    var recaptchaResponse = grecaptcha.getResponse();
-    if (!recaptchaResponse) {
-        showToast('Please complete the reCAPTCHA check.', 'error');
-        return;
-    }
+if (typeof grecaptcha === 'undefined') {
+    showToast('reCAPTCHA failed to load.', 'error');
+    return;
+}
+
+var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
 
     var pass = document.getElementById('reg-password').value;
     var confirm = document.getElementById('reg-confirm').value;
@@ -1004,7 +1022,9 @@ async function handleRegister(event) {
                 setLoading('register-btn', false);
                 document.getElementById('register-btn').classList.remove('success-state');
                 document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
-                grecaptcha.reset();
+
+               grecaptcha.reset(registerCaptchaId);
+
                 // Pre-fill email in verify section
                 document.getElementById('verify-email').value = data.email || '';
                 switchForm('verify-section');
@@ -1012,13 +1032,11 @@ async function handleRegister(event) {
         } else {
             setLoading('register-btn', false);
             showToast(data.detail || 'Registration failed', 'error');
-            grecaptcha.reset();
-        }
+            grecaptcha.reset(registerCaptchaId);        }
     } catch(err) {
         setLoading('register-btn', false);
         showToast('Cannot reach server. Check your connection.', 'error');
-        grecaptcha.reset();
-    }
+         grecaptcha.reset(registerCaptchaId);    }
 }
 
 
@@ -1110,7 +1128,8 @@ async function handleRegister(event) {
 
     document.getElementById('reg-phone').addEventListener('blur', function() {
         var val = this.value;
-        if (/^\d{10,13}$/.test(val)) {
+        if (/^\d{9}$/.test(val)) {
+
             markValid('reg-phone');
             document.getElementById('phone-error').classList.remove('show');
         } else if (val) {
@@ -1226,7 +1245,9 @@ async function handleVerify(event) {
     }
 }
 
-
+window.addEventListener('error', function(e) {
+    console.error('Global JS Error:', e.message);
+});
 
 
 </script>
