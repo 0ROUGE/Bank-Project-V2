@@ -53,7 +53,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token. Please log in again.")
 
-RECAPTCHA_SECRET = "6LfClf0sAAAADfpOhaFMFnf9S-g0cnJVCxdrLud"
+RECAPTCHA_SECRET = "6LdBpP8sAAAAAGcZ6cRXkvpV8BVtk7Ict8WlRXy4"
 
 # ── RECAPTCHA ─────────────────────────────────────────────────────────────────
 def verify_recaptcha(token: str) -> bool:
