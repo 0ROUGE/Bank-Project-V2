@@ -7,8 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
-
+    const BASE_URL = "https://bank-project-v2.onrender.com"<script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -758,21 +757,27 @@
 <div class="brand-footer">Save &middot; Invest &middot; Grow &mdash; CJ M-Banking 2025</div>
 
 <script>
-   const BASE_URL = "https://bank-project-v2.onrender.com";
+const BASE_URL = "https://bank-project-v2.onrender.com";
 
-   let loginCaptchaId;
-let registerCaptchaId;
+let loginCaptchaId = null;
+let registerCaptchaId = null;
 
-function onloadCallback() {
-    loginCaptchaId = grecaptcha.render('login-recaptcha', {
-        sitekey: '6LfCIf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b'
-    });
+window.onload = function () {
 
-    registerCaptchaId = grecaptcha.render('register-recaptcha', {
-        sitekey: '6LfCIf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b'
-    });
-}
+    if (typeof grecaptcha !== "undefined") {
 
+        loginCaptchaId = grecaptcha.render('login-recaptcha', {
+            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
+        });
+
+        registerCaptchaId = grecaptcha.render('register-recaptcha', {
+            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
+        });
+
+    } else {
+        console.error("reCAPTCHA failed to load.");
+    }
+};
     function showToast(message, type, duration) {
         duration = duration || 4000;
         var toast = document.getElementById('toast');
@@ -934,13 +939,17 @@ function onloadCallback() {
 async function handleLogin(event) {
     event.preventDefault();
 
-   if (typeof grecaptcha === 'undefined') {
+if (typeof grecaptcha === 'undefined' || loginCaptchaId === null) {
     showToast('reCAPTCHA failed to load.', 'error');
     return;
 }
 
 var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
 
+if (!recaptchaResponse) {
+    showToast('Please complete the reCAPTCHA.', 'error');
+    return;
+}
 
     setLoading('login-btn', true);
     var formData = new FormData(event.target);
@@ -979,13 +988,17 @@ var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
 async function handleRegister(event) {
     event.preventDefault();
 
-if (typeof grecaptcha === 'undefined') {
+if (typeof grecaptcha === 'undefined' || registerCaptchaId === null) {
     showToast('reCAPTCHA failed to load.', 'error');
     return;
 }
 
 var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
 
+if (!recaptchaResponse) {
+    showToast('Please complete the reCAPTCHA.', 'error');
+    return;
+}
     var pass = document.getElementById('reg-password').value;
     var confirm = document.getElementById('reg-confirm').value;
     var terms = document.getElementById('terms-checkbox').checked;
