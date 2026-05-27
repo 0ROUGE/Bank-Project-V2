@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    const BASE_URL = "https://bank-project-v2.onrender.com"<script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -763,6 +763,21 @@ let loginCaptchaId = null;
 let registerCaptchaId = null;
 
 window.onload = function () {
+
+    if (typeof grecaptcha !== "undefined") {
+
+        loginCaptchaId = grecaptcha.render('login-recaptcha', {
+            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
+        });
+
+        registerCaptchaId = grecaptcha.render('register-recaptcha', {
+            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
+        });
+
+    } else {
+        console.error("reCAPTCHA failed to load.");
+    }
+};window.onload = function () {
 
     if (typeof grecaptcha !== "undefined") {
 
