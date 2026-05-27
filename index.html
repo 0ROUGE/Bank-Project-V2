@@ -439,7 +439,7 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
-           
+           <div class="g-recaptcha" data-sitekey="6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b" style="margin-bottom: 16px;"></div>
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -451,50 +451,225 @@
         </div>
     </div>
 
-    <div id="register-section" class="form-section">
-        <div class="section-title">Create<br><em>account.</em></div>
-        <div class="section-sub">Join CJ M-Banking today</div>
-        <form id="register-form" onsubmit="return handleRegister(event)">
-            <div class="input-group">
-                <input type="text" name="username" id="reg-username" placeholder=" " required>
-                <label>Username</label>
-                <span class="check">✓</span>
+<div id="register-section" class="form-section">
+    <div class="section-title">Create<br><em>account.</em></div>
+    <div class="section-sub">Join CJ M-Banking today</div>
+    <form id="register-form" onsubmit="return handleRegister(event)">
+
+        <!-- USERNAME -->
+        <div class="input-group">
+            <input type="text" name="username" id="reg-username" placeholder=" " required>
+            <label>Username</label>
+            <span class="check">✓</span>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="input-group">
+            <input type="email" name="email" id="reg-email" placeholder=" " required>
+            <label>Email address</label>
+            <span class="check">✓</span>
+        </div>
+
+        <!-- FIRST NAME -->
+        <div class="input-group">
+            <input type="text" name="first_name" id="reg-firstname" placeholder=" " required>
+            <label>First name (as on ID)</label>
+            <span class="check">✓</span>
+        </div>
+
+        <!-- SURNAME -->
+        <div class="input-group">
+            <input type="text" name="surname" id="reg-surname" placeholder=" " required>
+            <label>Surname (as on ID)</label>
+            <span class="check">✓</span>
+        </div>
+
+        <!-- ID NUMBER -->
+        <div class="input-group">
+            <input type="text" name="id_number" id="reg-idnumber" placeholder=" "
+                   maxlength="14" required oninput="this.value=this.value.replace(/\D/g,'')">
+            <label>National ID / Maisha Card number</label>
+            <span class="check">✓</span>
+            <div class="field-error" id="id-error">Must be 8, 9, or 14 digits</div>
+        </div>
+
+        <!-- DATE OF BIRTH -->
+        <div class="input-group">
+            <input type="date" name="dob" id="reg-dob" placeholder=" " required
+                   max="" oninput="checkAge()">
+            <label style="top:-16px; font-size:9px; letter-spacing:3px;">Date of birth</label>
+            <div class="field-error" id="dob-error">You must be at least 18 years old</div>
+            <div class="field-error" id="age-display" style="color: var(--green-light); display:none;"></div>
+        </div>
+
+        <!-- PHONE — Kenya +254 prefix -->
+        <div class="input-group">
+            <div style="display:flex; align-items:center; border-bottom:1px solid var(--grey-light); padding: 10px 0;">
+                <span style="font-size:14px; margin-right:8px; flex-shrink:0;">🇰🇪 +254</span>
+                <input type="tel" name="phone" id="reg-phone" placeholder="7XXXXXXXX"
+                       maxlength="9" style="border:none; outline:none; background:transparent;
+                       font-family:'Outfit',sans-serif; font-size:16px; font-weight:300;
+                       color:var(--black); width:100%;"
+                       oninput="this.value=this.value.replace(/\D/g,'')" required>
             </div>
-            <div class="input-group">
-                <input type="email" name="email" id="reg-email" placeholder=" " required>
-                <label>Email address</label>
-                <span class="check">✓</span>
+            <div class="field-error" id="phone-error">Enter 9 digits after +254 (e.g. 712345678)</div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-group">
+            <input type="password" name="password" id="reg-password" placeholder=" "
+                   required oninput="checkStrength(this.value)">
+            <label>Password</label>
+            <span class="eye-toggle" onclick="togglePassword('reg-password', this)">👁</span>
+            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+            <div class="strength-label" id="strength-label"></div>
+            <div style="font-size:10px; color:var(--grey); margin-top:6px; letter-spacing:0.5px;">
+                Must have 8+ characters, uppercase, number and symbol
             </div>
-            <div class="input-group">
-                <input type="tel" name="phone" id="reg-phone" placeholder=" " required>
-                <label>Phone number</label>
-                <span class="check">✓</span>
-                <div class="field-error" id="phone-error">Enter a valid phone number (10-13 digits)</div>
+        </div>
+
+        <!-- CONFIRM PASSWORD -->
+        <div class="input-group">
+            <input type="password" name="confirm_password" id="reg-confirm" placeholder=" "
+                   required oninput="checkConfirm()">
+            <label>Confirm password</label>
+            <span class="eye-toggle" onclick="togglePassword('reg-confirm', this)">👁</span>
+            <div class="field-error" id="confirm-error">Passwords do not match</div>
+        </div>
+
+        <!-- TERMS -->
+        <label class="terms-group" onclick="openTermsModal()">
+            <input type="checkbox" id="terms-checkbox" name="terms_accepted" style="display:none">
+            <div class="custom-checkbox" id="terms-box">
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                    <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
             </div>
-            <div class="input-group">
-                <input type="password" name="password" id="reg-password" placeholder=" " required oninput="checkStrength(this.value)">
-                <label>Password</label>
-                <span class="eye-toggle" onclick="togglePassword('reg-password', this)">👁</span>
-                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-                <div class="strength-label" id="strength-label"></div>
+            <div class="terms-text">
+                I have read and agree to the <a onclick="event.stopPropagation(); openTermsModal()">
+                Terms & Conditions</a> and <a onclick="event.stopPropagation(); openTermsModal()">Privacy Policy</a>
             </div>
-            <div class="input-group">
-                <input type="password" name="confirm_password" id="reg-confirm" placeholder=" " required oninput="checkConfirm()">
-                <label>Confirm password</label>
-                <span class="eye-toggle" onclick="togglePassword('reg-confirm', this)">👁</span>
-                <div class="field-error" id="confirm-error">Passwords do not match</div>
+        </label>
+
+        <!-- RECAPTCHA -->
+        <div class="g-recaptcha" data-sitekey="6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b"
+             style="margin-bottom:16px;"></div>
+
+        <button type="submit" class="btn" id="register-btn">
+            <span class="btn-text">Create Account</span>
+            <div class="btn-dots"><span></span><span></span><span></span></div>
+        </button>
+    </form>
+    <div class="toggle-links">
+        <a onclick="switchForm('login-section')">Already have an account?</a>
+    </div>
+</div>
+
+<!-- VERIFY EMAIL SECTION -->
+<div id="verify-section" class="form-section">
+    <div class="section-title">Verify<br><em>email.</em></div>
+    <div class="section-sub">Enter the 6-digit code sent to your email</div>
+    <form id="verify-form" onsubmit="return handleVerify(event)">
+        <div class="input-group">
+            <input type="email" name="email" id="verify-email" placeholder=" " required>
+            <label>Email address</label>
+            <span class="check">✓</span>
+        </div>
+        <div class="input-group">
+            <input type="text" name="code" id="verify-code" placeholder=" "
+                   maxlength="6" required oninput="this.value=this.value.replace(/\D/g,'')">
+            <label>6-digit verification code</label>
+            <span class="check">✓</span>
+        </div>
+        <button type="submit" class="btn" id="verify-btn">
+            <span class="btn-text">Verify Email</span>
+            <div class="btn-dots"><span></span><span></span><span></span></div>
+        </button>
+    </form>
+    <div class="toggle-links">
+        <a onclick="switchForm('login-section')">Back to login</a>
+    </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div id="terms-modal" style="
+    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    z-index:9999; align-items:center; justify-content:center; padding:24px;">
+    <div style="background:var(--white); max-width:480px; width:100%;
+                max-height:85vh; border-radius:4px; display:flex; flex-direction:column;">
+        <div style="padding:28px 28px 0;">
+            <div style="font-family:'Cormorant Garamond',serif; font-size:26px; margin-bottom:4px;">
+                Terms & Conditions
             </div>
-            <label class="terms-group" onclick="toggleTerms()">
-                <input type="checkbox" id="terms-checkbox" name="terms_accepted">
-                <div class="custom-checkbox" id="terms-box">
-                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                        <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <div class="terms-text">
-                    I agree to the <a onclick="event.stopPropagation()">Terms and Conditions</a> and <a onclick="event.stopPropagation()">Privacy Policy</a>
-                </div>
-            </label>
+            <div style="font-size:10px; color:var(--grey); letter-spacing:3px;
+                        text-transform:uppercase; margin-bottom:20px;">
+                CJ M-Banking · Please read carefully
+            </div>
+        </div>
+        <div style="overflow-y:auto; padding:0 28px; flex:1; font-size:13px;
+                    line-height:1.8; color:#444;">
+
+            <p style="margin-bottom:16px;"><strong>1. Eligibility</strong><br>
+            You must be at least 18 years of age and a Kenyan citizen or resident to open
+            an account with CJ M-Banking. By registering, you confirm that all information
+            provided is accurate and matches your official government-issued identification.</p>
+
+            <p style="margin-bottom:16px;"><strong>2. Account Responsibility</strong><br>
+            You are solely responsible for maintaining the confidentiality of your username
+            and password. Any activity conducted through your account is your responsibility.
+            CJ M-Banking will not be liable for losses arising from unauthorised access
+            caused by your failure to keep credentials secure.</p>
+
+            <p style="margin-bottom:16px;"><strong>3. Prohibited Activities</strong><br>
+            You agree not to use CJ M-Banking for money laundering, fraud, financing of
+            terrorism, or any activity that violates Kenyan law including the Proceeds of
+            Crime and Anti-Money Laundering Act. Violation will result in immediate account
+            suspension and reporting to relevant authorities.</p>
+
+            <p style="margin-bottom:16px;"><strong>4. Deposits & Withdrawals</strong><br>
+            All transactions are processed in Kenyan Shillings (KES). CJ M-Banking reserves
+            the right to place holds on suspicious transactions pending verification.
+            Minimum transaction amounts may apply.</p>
+
+            <p style="margin-bottom:16px;"><strong>5. Privacy & Data</strong><br>
+            Your personal data including name, ID number, date of birth and phone number
+            is collected for KYC (Know Your Customer) compliance as required by the Central
+            Bank of Kenya. Your data will not be sold to third parties. We may share
+            information with regulatory authorities when required by law.</p>
+
+            <p style="margin-bottom:16px;"><strong>6. Account Suspension</strong><br>
+            CJ M-Banking reserves the right to suspend or close accounts that violate these
+            terms, show suspicious activity, or provide false registration information.
+            Funds in suspended accounts will be held pending investigation.</p>
+
+            <p style="margin-bottom:16px;"><strong>7. Amendments</strong><br>
+            These terms may be updated from time to time. Continued use of the service
+            after changes constitutes acceptance of the updated terms.</p>
+
+            <p style="margin-bottom:24px;"><strong>8. Governing Law</strong><br>
+            These terms are governed by the laws of the Republic of Kenya. Any disputes
+            shall be resolved under Kenyan jurisdiction.</p>
+        </div>
+        <div style="padding:20px 28px; border-top:1px solid var(--grey-light);
+                    display:flex; gap:12px;">
+            <button onclick="declineTerms()" style="
+                flex:1; padding:14px; background:none; border:1px solid var(--grey-light);
+                font-size:11px; letter-spacing:2px; text-transform:uppercase;
+                cursor:pointer; font-family:'Outfit',sans-serif; color:var(--grey);">
+                I Decline
+            </button>
+            <button onclick="acceptTerms()" style="
+                flex:1; padding:14px; background:var(--black); color:var(--white);
+                border:none; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+                cursor:pointer; font-family:'Outfit',sans-serif;">
+                I Accept
+            </button>
+        </div>
+    </div>
+</div>
+              <div class="g-recaptcha" data-sitekey="6LfClf0sAAAAACH0VRYiB0PQQj-djQpZsHdpMvT1b" style="margin-bottom: 16px;"></div>
+
                 <button type="submit" class="btn" id="register-btn">
                 <span class="btn-text">Create Account</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -749,79 +924,113 @@
         el.classList.remove('valid-field');
     }
 
-    async function handleLogin(event) {
-        event.preventDefault();
-        setLoading('login-btn', true);
-        var formData = new FormData(event.target);
-        try {
-            var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
-            var data = await response.json();
-            
-                if (response.ok) {
-                localStorage.setItem('cj_token', data.token);
-                localStorage.setItem('cj_user', JSON.stringify(data.user));
-                localStorage.setItem('cj_user_email', data.user.email);
-                setSuccess('login-btn', 'Welcome back');
-                showToast('Welcome back, ' + data.user.username + '!', 'success');
-                setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
-            } else {
-                setLoading('login-btn', false);
-                showToast(data.detail || 'Login failed', 'error');
-                markError('login-username');
-                markError('login-password');
-            }
-        } catch(err) {
-            setLoading('login-btn', false);
-            showToast('Cannot reach server. Check your connection.', 'error');
-        }
+
+async function handleLogin(event) {
+    event.preventDefault();
+
+    var recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        showToast('Please complete the reCAPTCHA check.', 'error');
+        return;
     }
 
-    async function handleRegister(event) {
-        event.preventDefault();
-        var pass = document.getElementById('reg-password').value;
-        var confirm = document.getElementById('reg-confirm').value;
-        var terms = document.getElementById('terms-checkbox').checked;
-        var phone = document.getElementById('reg-phone').value;
-        if (pass !== confirm) {
-            document.getElementById('confirm-error').classList.add('show');
-            markError('reg-confirm');
-            return;
+    setLoading('login-btn', true);
+    var formData = new FormData(event.target);
+    formData.append('recaptcha_token', recaptchaResponse);
+
+    try {
+        var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
+        var data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem('cj_token', data.token);
+            localStorage.setItem('cj_user', JSON.stringify(data.user));
+            localStorage.setItem('cj_user_email', data.user.email);
+            setSuccess('login-btn', 'Welcome back');
+            showToast('Welcome back, ' + data.user.username + '!', 'success');
+            setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
+
+        } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
+            setLoading('login-btn', false);
+            showToast('Please verify your email before logging in.', 'error');
+            grecaptcha.reset();
+
+        } else {
+            setLoading('login-btn', false);
+            showToast(data.detail || 'Login failed', 'error');
+            markError('login-username');
+            markError('login-password');
+            grecaptcha.reset();
         }
-        if (!terms) {
-            showToast('Please accept the terms and conditions', 'error');
-            return;
-        }
-        if (!/^\d{10,13}$/.test(phone)) {
-            document.getElementById('phone-error').classList.add('show');
-            markError('reg-phone');
-            return;
-        }
-        setLoading('register-btn', true);
-        var formData = new FormData(event.target);
-        formData.set('terms_accepted', 'true');
-        try {
-            var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
-            var data = await response.json();
-            if (response.ok) {
-                setSuccess('register-btn', 'Account Created');
-                showToast('Account created! Please log in.', 'success');
-                setTimeout(function() {
-                    event.target.reset();
-                    document.getElementById('terms-box').classList.remove('checked');
-                    document.getElementById('register-btn').classList.remove('success-state');
-                    document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
-                    setLoading('register-btn', false);
-                    switchForm('login-section');
-                }, 1500);
-            } else {
-                setLoading('register-btn', false);
-                showToast(data.detail || 'Registration failed', 'error');
-            }
-        } catch(err) {
-            setLoading('register-btn', false);
-            showToast('Cannot reach server. Check your connection.', 'error');
-        }
+    } catch(err) {
+        setLoading('login-btn', false);
+        showToast('Cannot reach server. Check your connection.', 'error');
+        grecaptcha.reset();
     }
+}
+
+async function handleRegister(event) {
+    event.preventDefault();
+
+    var recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        showToast('Please complete the reCAPTCHA check.', 'error');
+        return;
+    }
+
+    var pass = document.getElementById('reg-password').value;
+    var confirm = document.getElementById('reg-confirm').value;
+    var terms = document.getElementById('terms-checkbox').checked;
+    var phone = document.getElementById('reg-phone').value;
+    var idNumber = document.getElementById('reg-idnumber').value;
+    var dob = document.getElementById('reg-dob').value;
+
+    if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
+    if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
+    if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
+    if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
+
+    // Age check
+    var birthDate = new Date(dob);
+    var today = new Date();
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
+
+    setLoading('register-btn', true);
+    var formData = new FormData(event.target);
+    formData.set('terms_accepted', 'true');
+    formData.set('phone', '+254' + phone);
+    formData.append('recaptcha_token', recaptchaResponse);
+
+    try {
+        var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
+        var data = await response.json();
+        if (response.ok) {
+            setSuccess('register-btn', 'Account Created');
+            showToast('Account created! Check your email for a verification code.', 'success');
+            setTimeout(function() {
+                setLoading('register-btn', false);
+                document.getElementById('register-btn').classList.remove('success-state');
+                document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
+                grecaptcha.reset();
+                // Pre-fill email in verify section
+                document.getElementById('verify-email').value = data.email || '';
+                switchForm('verify-section');
+            }, 1500);
+        } else {
+            setLoading('register-btn', false);
+            showToast(data.detail || 'Registration failed', 'error');
+            grecaptcha.reset();
+        }
+    } catch(err) {
+        setLoading('register-btn', false);
+        showToast('Cannot reach server. Check your connection.', 'error');
+        grecaptcha.reset();
+    }
+}
+
 
     async function handleForgot(event) {
         event.preventDefault();
@@ -927,6 +1136,109 @@
     document.getElementById('login-username').addEventListener('input', function() {
         this.classList.remove('error-field', 'valid-field');
     });
+
+// ── AGE CHECK ─────────────────────────────────────────────────────────────────
+function checkAge() {
+    var dob = document.getElementById('reg-dob').value;
+    var dobError = document.getElementById('dob-error');
+    var ageDisplay = document.getElementById('age-display');
+    var input = document.getElementById('reg-dob');
+
+    if (!dob) return;
+
+    var today = new Date();
+    var birthDate = new Date(dob);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+
+    if (age < 18) {
+        dobError.classList.add('show');
+        ageDisplay.style.display = 'none';
+        input.classList.add('error-field');
+        input.classList.remove('valid-field');
+    } else {
+        dobError.classList.remove('show');
+        ageDisplay.style.display = 'block';
+        ageDisplay.textContent = 'Age: ' + age + ' years ✓';
+        input.classList.remove('error-field');
+        input.classList.add('valid-field');
+    }
+}
+
+// Set max date on DOB to today
+document.addEventListener('DOMContentLoaded', function() {
+    var today = new Date().toISOString().split('T')[0];
+    document.getElementById('reg-dob').setAttribute('max', today);
+});
+
+// ── ID NUMBER VALIDATION ──────────────────────────────────────────────────────
+document.getElementById('reg-idnumber').addEventListener('blur', function() {
+    var val = this.value;
+    var err = document.getElementById('id-error');
+    if (val && [8, 9, 14].includes(val.length)) {
+        markValid('reg-idnumber');
+        err.classList.remove('show');
+    } else if (val) {
+        markError('reg-idnumber');
+        err.classList.add('show');
+    }
+});
+
+// ── TERMS MODAL ───────────────────────────────────────────────────────────────
+function openTermsModal() {
+    document.getElementById('terms-modal').style.display = 'flex';
+}
+
+function acceptTerms() {
+    document.getElementById('terms-modal').style.display = 'none';
+    document.getElementById('terms-checkbox').checked = true;
+    document.getElementById('terms-box').classList.add('checked');
+}
+
+function declineTerms() {
+    document.getElementById('terms-modal').style.display = 'none';
+    document.getElementById('terms-checkbox').checked = false;
+    document.getElementById('terms-box').classList.remove('checked');
+    // Clear all registration fields
+    document.getElementById('register-form').reset();
+    document.getElementById('terms-box').classList.remove('checked');
+    document.getElementById('strength-fill').style.width = '0%';
+    document.getElementById('strength-label').textContent = '';
+    document.getElementById('age-display').style.display = 'none';
+    showToast('You must accept the terms to register.', 'error');
+}
+
+// ── EMAIL VERIFICATION ────────────────────────────────────────────────────────
+async function handleVerify(event) {
+    event.preventDefault();
+    setLoading('verify-btn', true);
+    var formData = new FormData(event.target);
+    try {
+        var response = await fetch(BASE_URL + '/verify-email', { method: 'POST', body: formData });
+        var data = await response.json();
+        if (response.ok) {
+            setSuccess('verify-btn', 'Verified!');
+            showToast('Email verified! You can now log in.', 'success');
+            setTimeout(function() {
+                setLoading('verify-btn', false);
+                document.getElementById('verify-btn').classList.remove('success-state');
+                document.getElementById('verify-btn').querySelector('.btn-text').textContent = 'Verify Email';
+                switchForm('login-section');
+            }, 1500);
+        } else {
+            setLoading('verify-btn', false);
+            showToast(data.detail || 'Verification failed', 'error');
+        }
+    } catch(err) {
+        setLoading('verify-btn', false);
+        showToast('Cannot reach server.', 'error');
+    }
+}
+
+
+
+
 </script>
 </body>
 </html>

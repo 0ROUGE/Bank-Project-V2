@@ -805,26 +805,36 @@
 </div>
 
 <script>
-    const BASE_URL = "https://bank-project-v2.onrender.com";
 
-    // ── INIT ──────────────────────────────────────────────────────────────────
-    const user = JSON.parse(localStorage.getItem('cj_user') || 'null');
-    if (!user) window.location.href = '/';
+     const BASE_URL = "https://bank-project-v2.onrender.com";
+let user = JSON.parse(localStorage.getItem('cj_user') || 'null');
 
-    function init() {
-        setGreeting();
-        loadProfile();
-        loadTransactions();
-        loadAllowance();
+async function init() {
+    const token = localStorage.getItem('cj_token');
+    if (!token) { window.location.href = '/'; return; }
+
+    try {
+        const res = await fetch(BASE_URL + '/me', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (!res.ok) {
+            localStorage.clear();
+            window.location.href = '/';
+            return;
+        }
+        const freshUser = await res.json();
+        localStorage.setItem('cj_user', JSON.stringify(freshUser));
+        user = freshUser;
+    } catch(e) {
+        console.warn('Token check failed:', e);
+        if (!user) { window.location.href = '/'; return; }
     }
 
-    function setGreeting() {
-        const hour = new Date().getHours();
-        const el = document.getElementById('timeGreeting');
-        if (hour < 12) el.textContent = 'morning';
-        else if (hour < 17) el.textContent = 'afternoon';
-        else el.textContent = 'evening';
-    }
+    setGreeting();
+    loadProfile();
+    loadTransactions();
+    loadAllowance();
+}
 
     // ── LOAD PROFILE ──────────────────────────────────────────────────────────
     async function loadProfile() {
