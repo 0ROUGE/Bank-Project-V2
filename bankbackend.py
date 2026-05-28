@@ -53,20 +53,12 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token. Please log in again.")
 
-RECAPTCHA_SECRET = "6LdBpP8sAAAAAGcZ6cRXkvpV8BVtk7Ict8WlRXy4"
-
-# ── RECAPTCHA ─────────────────────────────────────────────────────────────────
-def verify_recaptcha(token: str) -> bool:
-    return True
-
 # ── DATABASE ──────────────────────────────────────────────────────────────────
-# THE FIX: CREATE TABLE IF NOT EXISTS — never drop tables on startup
 def init_db():
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
-
     cursor.execute("""
-	CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
@@ -94,7 +86,6 @@ def init_db():
             purpose TEXT DEFAULT 'reset'
         )
     """)
-
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,7 +97,6 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     """)
-
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS allowances (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -118,7 +108,6 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     """)
-
     conn.commit()
     conn.close()
 
@@ -139,26 +128,18 @@ def send_email(to_email: str, subject: str, body: str):
 
 def send_recovery_email(to_email: str, code: str):
     send_email(to_email, "CJ M-Banking — Your Recovery Code", f"""Hello,
-
 Your password recovery code is:
-
     {code}
-
 This code expires in 60 seconds.
 If you did not request this, ignore this email.
-
 — CJ M-Banking Support""")
 
 def send_verification_email(to_email: str, code: str):
     send_email(to_email, "CJ M-Banking — Verify Your Email", f"""Welcome to CJ M-Banking!
-
 Your email verification code is:
-
     {code}
-
 This code expires in 10 minutes.
 Enter it on the verification page to activate your account.
-
 — CJ M-Banking Support""")
 
 # ── STATIC + PAGES ────────────────────────────────────────────────────────────
@@ -190,7 +171,6 @@ async def get_me(payload: dict = Depends(verify_token)):
             "full_name": user[4], "bio": user[5], "photo_url": user[6], "balance": user[7]}
 
 # ── CREATE ACCOUNT ────────────────────────────────────────────────────────────
-# ── CREATE ACCOUNT ────────────────────────────────────────────────────────────
 @app.post("/create-account")
 async def register_user(
     username: str = Form(...),
@@ -202,26 +182,23 @@ async def register_user(
     first_name: str = Form(...),
     surname: str = Form(...),
     id_number: str = Form(...),
-    dob: str = Form(...),
-    recaptcha_token: str = Form("")
+    dob: str = Form(...)
 ):
-    if not verify_recaptcha(recaptcha_token):
-        raise HTTPException(status_code=400, detail="reCAPTCHA verification failed. Please try again.")
     if password != confirm_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
     if terms_accepted != "true":
         raise HTTPException(status_code=400, detail="You must accept the terms and conditions")
 
-    # Phone validation — strip +254 prefix if present
+    # Phone validation
     clean_phone = phone.replace("+254", "").replace(" ", "")
     if not clean_phone.isdigit() or len(clean_phone) != 9:
         raise HTTPException(status_code=400, detail="Enter a valid Kenyan phone number")
 
-    # ID number validation — 8, 9, or 14 digits
+    # ID number validation
     if not id_number.isdigit() or len(id_number) not in [8, 9, 14]:
         raise HTTPException(status_code=400, detail="ID number must be 8, 9, or 14 digits")
 
-    # Age validation — must be 18+
+    # Age validation
     try:
         dob_date = datetime.strptime(dob, "%Y-%m-%d")
         today = datetime.utcnow()
@@ -231,7 +208,7 @@ async def register_user(
     except ValueError:
         raise HTTPException(status_code=400, detail="Invalid date of birth format")
 
-    # Password strength — must have uppercase, number, and symbol
+    # Password strength
     import re
     if not re.search(r'[A-Z]', password):
         raise HTTPException(status_code=400, detail="Password must contain at least one uppercase letter")
@@ -286,6 +263,7 @@ async def register_user(
         "needs_verification": True,
         "email": email
     }
+
 # ── VERIFY EMAIL ──────────────────────────────────────────────────────────────
 @app.post("/verify-email")
 async def verify_email(email: str = Form(...), code: str = Form(...)):
@@ -293,14 +271,15 @@ async def verify_email(email: str = Form(...), code: str = Form(...)):
     cursor = conn.cursor()
     cursor.execute("SELECT code, expires_at FROM recovery_codes WHERE email=? AND purpose='verify'", (email,))
     row = cursor.fetchone()
-
     if not row:
         conn.close()
         raise HTTPException(status_code=400, detail="No verification code found.")
+
     stored_code, expires_at = row
     if datetime.utcnow() > datetime.fromisoformat(expires_at):
         conn.close()
         raise HTTPException(status_code=400, detail="Code has expired.")
+
     if code != stored_code:
         conn.close()
         raise HTTPException(status_code=400, detail="Incorrect verification code.")
@@ -309,17 +288,15 @@ async def verify_email(email: str = Form(...), code: str = Form(...)):
     cursor.execute("DELETE FROM recovery_codes WHERE email=? AND purpose='verify'", (email,))
     conn.commit()
     conn.close()
+
     return {"message": "Email verified! You can now log in."}
 
 # ── LOGIN ─────────────────────────────────────────────────────────────────────
 @app.post("/login")
 async def login_user(
     username: str = Form(...),
-    password: str = Form(...),
-    recaptcha_token: str = Form("")
+    password: str = Form(...)
 ):
-    if not verify_recaptcha(recaptcha_token):
-        raise HTTPException(status_code=400, detail="reCAPTCHA verification failed. Please try again.")
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute(
@@ -331,10 +308,12 @@ async def login_user(
 
     if not user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
+
     if user[8] == 0:
         raise HTTPException(status_code=403, detail="EMAIL_NOT_VERIFIED")
 
     token = create_token(user[0], user[1])
+
     return {
         "message": "LOGIN SUCCESSFUL",
         "token": token,
@@ -369,6 +348,7 @@ async def update_profile(
     cursor.execute("SELECT id, username, email, phone, full_name, bio, photo_url, balance FROM users WHERE username=?", (username,))
     user = cursor.fetchone()
     conn.close()
+
     return {"message": "Profile updated", "user": {"id": user[0], "username": user[1], "email": user[2],
             "phone": user[3], "full_name": user[4], "bio": user[5], "photo_url": user[6], "balance": user[7]}}
 
@@ -377,6 +357,7 @@ async def update_profile(
 async def deposit(username: str = Form(...), amount: float = Form(...), description: str = Form("Deposit")):
     if amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id, balance FROM users WHERE username=?", (username,))
@@ -384,12 +365,14 @@ async def deposit(username: str = Form(...), amount: float = Form(...), descript
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
+
     new_balance = user[1] + amount
     cursor.execute("UPDATE users SET balance=? WHERE username=?", (new_balance, username))
     cursor.execute("INSERT INTO transactions (user_id, type, amount, description, created_at) VALUES (?, ?, ?, ?, ?)",
                    (user[0], "deposit", amount, description, datetime.utcnow().isoformat()))
     conn.commit()
     conn.close()
+
     return {"message": "Deposit successful", "new_balance": new_balance}
 
 # ── WITHDRAW ──────────────────────────────────────────────────────────────────
@@ -397,6 +380,7 @@ async def deposit(username: str = Form(...), amount: float = Form(...), descript
 async def withdraw(username: str = Form(...), amount: float = Form(...), description: str = Form("Withdrawal")):
     if amount <= 0:
         raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute("SELECT id, balance FROM users WHERE username=?", (username,))
@@ -404,15 +388,18 @@ async def withdraw(username: str = Form(...), amount: float = Form(...), descrip
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
+
     if user[1] < amount:
         conn.close()
         raise HTTPException(status_code=400, detail="Insufficient funds")
+
     new_balance = user[1] - amount
     cursor.execute("UPDATE users SET balance=? WHERE username=?", (new_balance, username))
     cursor.execute("INSERT INTO transactions (user_id, type, amount, description, created_at) VALUES (?, ?, ?, ?, ?)",
                    (user[0], "withdrawal", amount, description, datetime.utcnow().isoformat()))
     conn.commit()
     conn.close()
+
     return {"message": "Withdrawal successful", "new_balance": new_balance}
 
 # ── TRANSACTIONS ──────────────────────────────────────────────────────────────
@@ -425,9 +412,11 @@ async def get_transactions(username: str):
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
+
     cursor.execute("SELECT type, amount, description, created_at FROM transactions WHERE user_id=? ORDER BY created_at DESC LIMIT 20", (user[0],))
     rows = cursor.fetchall()
     conn.close()
+
     return {"transactions": [{"type": r[0], "amount": r[1], "description": r[2], "created_at": r[3]} for r in rows]}
 
 # ── SET ALLOWANCE ─────────────────────────────────────────────────────────────
@@ -440,12 +429,14 @@ async def set_allowance(username: str = Form(...), amount: float = Form(...), fr
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
+
     next_date = (datetime.utcnow() + timedelta(days=7)).isoformat()
     cursor.execute("DELETE FROM allowances WHERE user_id=?", (user[0],))
     cursor.execute("INSERT INTO allowances (user_id, amount, frequency, next_date, created_at) VALUES (?, ?, ?, ?, ?)",
                    (user[0], amount, frequency, next_date, datetime.utcnow().isoformat()))
     conn.commit()
     conn.close()
+
     return {"message": f"Allowance of KES {amount} set successfully"}
 
 # ── GET ALLOWANCE ─────────────────────────────────────────────────────────────
@@ -458,9 +449,11 @@ async def get_allowance(username: str):
     if not user:
         conn.close()
         raise HTTPException(status_code=404, detail="User not found")
+
     cursor.execute("SELECT amount, frequency, next_date FROM allowances WHERE user_id=?", (user[0],))
     row = cursor.fetchone()
     conn.close()
+
     if not row:
         return {"allowance": None}
     return {"allowance": {"amount": row[0], "frequency": row[1], "next_date": row[2]}}
@@ -474,18 +467,22 @@ async def forgot_password(email: str = Form(...)):
     if not cursor.fetchone():
         conn.close()
         raise HTTPException(status_code=400, detail="No account found with that email")
+
     cursor.execute("SELECT attempts FROM recovery_codes WHERE email=? AND purpose='reset'", (email,))
     existing = cursor.fetchone()
     if existing and existing[0] >= 3:
         conn.close()
         raise HTTPException(status_code=429, detail="Maximum attempts reached. Please contact support.")
+
     code = ''.join(random.choices(string.digits, k=6))
     expires_at = (datetime.utcnow() + timedelta(seconds=60)).isoformat()
+
     cursor.execute("DELETE FROM recovery_codes WHERE email=? AND purpose='reset'", (email,))
     cursor.execute("INSERT INTO recovery_codes (email, code, expires_at, attempts, purpose) VALUES (?, ?, ?, ?, ?)",
                    (email, code, expires_at, 1, 'reset'))
     conn.commit()
     conn.close()
+
     send_recovery_email(email, code)
     return {"message": "Recovery code sent to your email."}
 
@@ -499,16 +496,20 @@ async def resend_code(email: str = Form(...)):
     if not row:
         conn.close()
         raise HTTPException(status_code=400, detail="Request a code first")
+
     attempts = row[0]
     if attempts >= 3:
         conn.close()
         raise HTTPException(status_code=429, detail="Maximum attempts reached.")
+
     code = ''.join(random.choices(string.digits, k=6))
     expires_at = (datetime.utcnow() + timedelta(seconds=60)).isoformat()
+
     cursor.execute("UPDATE recovery_codes SET code=?, expires_at=?, attempts=? WHERE email=? AND purpose='reset'",
                    (code, expires_at, attempts + 1, email))
     conn.commit()
     conn.close()
+
     send_recovery_email(email, code)
     return {"message": f"New code sent. {3 - (attempts + 1)} attempt(s) remaining."}
 
@@ -518,6 +519,7 @@ async def reset_password(email: str = Form(...), code: str = Form(...),
                          new_password: str = Form(...), confirm_new_password: str = Form(...)):
     if new_password != confirm_new_password:
         raise HTTPException(status_code=400, detail="Passwords do not match")
+
     conn = sqlite3.connect("bank.db")
     cursor = conn.cursor()
     cursor.execute("SELECT code, expires_at FROM recovery_codes WHERE email=? AND purpose='reset'", (email,))
@@ -525,17 +527,21 @@ async def reset_password(email: str = Form(...), code: str = Form(...),
     if not row:
         conn.close()
         raise HTTPException(status_code=400, detail="No recovery code found.")
+
     stored_code, expires_at = row
     if datetime.utcnow() > datetime.fromisoformat(expires_at):
         conn.close()
         raise HTTPException(status_code=400, detail="Code has expired.")
+
     if code != stored_code:
         conn.close()
         raise HTTPException(status_code=400, detail="Incorrect recovery code")
+
     cursor.execute("UPDATE users SET password=? WHERE email=?", (new_password, email))
     cursor.execute("DELETE FROM recovery_codes WHERE email=? AND purpose='reset'", (email,))
     conn.commit()
     conn.close()
+
     return {"message": "Password updated successfully!"}
 
 # ── PROFILE ───────────────────────────────────────────────────────────────────
