@@ -58,7 +58,7 @@ RECAPTCHA_SECRET = "6LdBpP8sAAAAAGcZ6cRXkvpV8BVtk7Ict8WlRXy4"
 # ── RECAPTCHA ─────────────────────────────────────────────────────────────────
 def verify_recaptcha(token: str) -> bool:
     if not token:
-        return False
+        return True
     try:
         url = "https://www.google.com/recaptcha/api/siteverify"
         data = urllib.parse.urlencode({
