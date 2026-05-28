@@ -6,7 +6,7 @@
     <title>CJ M-BANKING</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js?onload=initCaptcha&render=explicit" async defer></script>
+     <script src="https://www.google.com/recaptcha/enterprise.js" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -334,7 +334,13 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
-            <div id="login-recaptcha" style="margin-bottom:16px;"></div>
+        
+       <form action="" method="POST">
+      <div class="g-recaptcha" data-sitekey="6LfklgAtAAAAALObncJVOQP8Kx4pxWZW33K8u95f" data-action="LOGIN"></div>
+      <br/>
+      <input type="submit" value="Submit">
+    </form>
+
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -345,7 +351,7 @@
             <a onclick="switchForm('register-section')">Create account</a>
         </div>
     </div>
-
+   
     <!-- REGISTER -->
     <div id="register-section" class="form-section">
         <div class="section-title">Create<br><em>account.</em></div>
@@ -424,7 +430,12 @@
                     <a onclick="event.stopPropagation(); openTermsModal()">Privacy Policy</a>
                 </div>
             </label>
-            <div id="register-recaptcha" style="margin-bottom:16px;"></div>
+             <form action="" method="POST">
+      <div class="g-recaptcha" data-sitekey="6LfklgAtAAAAALObncJVOQP8Kx4pxWZW33K8u95f" data-action="LOGIN"></div>
+      <br/>
+      <input type="submit" value="Submit">
+    </form>
+
             <button type="submit" class="btn" id="register-btn">
                 <span class="btn-text">Create Account</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
