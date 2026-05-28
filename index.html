@@ -753,90 +753,84 @@
         }
     }
 
-    async function handleLogin(event) {
-        event.preventDefault();
-        var recaptchaResponse = 'disabled';
-         setLoading('login-btn', true);
-        var formData = new FormData(event.target);
-        formData.append('recaptcha_token', recaptchaResponse);
-        try {
-            var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
-            var data = await response.json();
-            if (response.ok) {
-                localStorage.setItem('cj_token', data.token);
-                localStorage.setItem('cj_user', JSON.stringify(data.user));
-                localStorage.setItem('cj_user_email', data.user.email);
-                setSuccess('login-btn', 'Welcome back');
-                showToast('Welcome back, ' + data.user.username + '!', 'success');
-                setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
-            } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
-                setLoading('login-btn', false);
-                showToast('Please verify your email before logging in.', 'error');
-                grecaptcha.reset(loginCaptchaId);
-            } else {
-                setLoading('login-btn', false);
-                showToast(data.detail || 'Login failed', 'error');
-                markError('login-username');
-                markError('login-password');
-                grecaptcha.reset(loginCaptchaId);
-            }
-        } catch(err) {
+
+async function handleLogin(event) {
+    event.preventDefault();
+    var recaptchaResponse = 'disabled';
+    setLoading('login-btn', true);
+    var formData = new FormData(event.target);
+    formData.append('recaptcha_token', recaptchaResponse);
+    try {
+        var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
+        var data = await response.json();
+        if (response.ok) {
+            localStorage.setItem('cj_token', data.token);
+            localStorage.setItem('cj_user', JSON.stringify(data.user));
+            localStorage.setItem('cj_user_email', data.user.email);
+            setSuccess('login-btn', 'Welcome back');
+            showToast('Welcome back, ' + data.user.username + '!', 'success');
+            setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
+        } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
             setLoading('login-btn', false);
-            showToast('Cannot reach server. Check your connection.', 'error');
-            grecaptcha.reset(loginCaptchaId);
+            showToast('Please verify your email before logging in.', 'error');
+        } else {
+            setLoading('login-btn', false);
+            showToast(data.detail || 'Login failed', 'error');
+            markError('login-username');
+            markError('login-password');
         }
+    } catch(err) {
+        setLoading('login-btn', false);
+        showToast('Cannot reach server. Check your connection.', 'error');
     }
+}
 
-    async function handleRegister(event) {
-        event.preventDefault();
-        var recaptchaResponse = 'disabled';
-        var pass = document.getElementById('reg-password').value;
-        var confirm = document.getElementById('reg-confirm').value;
-        var terms = document.getElementById('terms-checkbox').checked;
-        var phone = document.getElementById('reg-phone').value;
-        var idNumber = document.getElementById('reg-idnumber').value;
-        var dob = document.getElementById('reg-dob').value;
-        if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
-        if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
-        if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
-        if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
-        var birthDate = new Date(dob);
-        var today = new Date();
-        var age = today.getFullYear() - birthDate.getFullYear();
-        var m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-        if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
-        setLoading('register-btn', true);
-        var formData = new FormData(event.target);
-        formData.set('terms_accepted', 'true');
-        formData.set('phone', '+254' + phone);
-        formData.append('recaptcha_token', recaptchaResponse);
-        try {
-            var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
-            var data = await response.json();
-            if (response.ok) {
-                setSuccess('register-btn', 'Account Created');
-                showToast('Account created! Check your email for a verification code.', 'success');
-                setTimeout(function() {
-                    setLoading('register-btn', false);
-                    document.getElementById('register-btn').classList.remove('success-state');
-                    document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
-                    grecaptcha.reset(registerCaptchaId);
-                    document.getElementById('verify-email').value = data.email || '';
-                    switchForm('verify-section');
-                }, 1500);
-            } else {
+async function handleRegister(event) {
+    event.preventDefault();
+    var recaptchaResponse = 'disabled';
+    var pass = document.getElementById('reg-password').value;
+    var confirm = document.getElementById('reg-confirm').value;
+    var terms = document.getElementById('terms-checkbox').checked;
+    var phone = document.getElementById('reg-phone').value;
+    var idNumber = document.getElementById('reg-idnumber').value;
+    var dob = document.getElementById('reg-dob').value;
+    if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
+    if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
+    if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
+    if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
+    var birthDate = new Date(dob);
+    var today = new Date();
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+    if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
+    setLoading('register-btn', true);
+    var formData = new FormData(event.target);
+    formData.set('terms_accepted', 'true');
+    formData.set('phone', '+254' + phone);
+    formData.append('recaptcha_token', recaptchaResponse);
+    try {
+        var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
+        var data = await response.json();
+        if (response.ok) {
+            setSuccess('register-btn', 'Account Created');
+            showToast('Account created! Check your email for a verification code.', 'success');
+            setTimeout(function() {
                 setLoading('register-btn', false);
-                showToast(data.detail || 'Registration failed', 'error');
-                grecaptcha.reset(registerCaptchaId);
-            }
-        } catch(err) {
+                document.getElementById('register-btn').classList.remove('success-state');
+                document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
+                document.getElementById('verify-email').value = data.email || '';
+                switchForm('verify-section');
+            }, 1500);
+        } else {
             setLoading('register-btn', false);
-            showToast('Cannot reach server. Check your connection.', 'error');
-            grecaptcha.reset(registerCaptchaId);
+            showToast(data.detail || 'Registration failed', 'error');
         }
+    } catch(err) {
+        setLoading('register-btn', false);
+        showToast('Cannot reach server. Check your connection.', 'error');
     }
-
+}
     async function handleVerify(event) {
         event.preventDefault();
         setLoading('verify-btn', true);
