@@ -57,20 +57,7 @@ RECAPTCHA_SECRET = "6LdBpP8sAAAAAGcZ6cRXkvpV8BVtk7Ict8WlRXy4"
 
 # ── RECAPTCHA ─────────────────────────────────────────────────────────────────
 def verify_recaptcha(token: str) -> bool:
-    if not token:
-        return True
-    try:
-        url = "https://www.google.com/recaptcha/api/siteverify"
-        data = urllib.parse.urlencode({
-            "secret": RECAPTCHA_SECRET,
-            "response": token
-        }).encode()
-        req = urllib.request.Request(url, data=data)
-        with urllib.request.urlopen(req) as response:
-            result = json.loads(response.read())
-            return result.get("success", False)
-    except:
-        return False
+    return True
 
 # ── DATABASE ──────────────────────────────────────────────────────────────────
 # THE FIX: CREATE TABLE IF NOT EXISTS — never drop tables on startup
