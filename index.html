@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CJ M-BANKING</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?onload=initCaptcha&render=explicit" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -72,12 +71,8 @@
             text-transform: uppercase;
             font-weight: 300;
         }
-        .logo-wrap {
-            padding: 40px 0 30px;
-        }
-        .logo-wrap svg {
-            animation: floatLogo 4s ease-in-out infinite;
-        }
+        .logo-wrap { padding: 40px 0 30px; }
+        .logo-wrap svg { animation: floatLogo 4s ease-in-out infinite; }
         @keyframes floatLogo {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-6px); }
@@ -87,10 +82,7 @@
             max-width: 420px;
             padding: 0 24px 60px;
         }
-        .form-section {
-            display: none;
-            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+        .form-section { display: none; animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .form-section.active { display: block; }
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(30px); }
@@ -104,11 +96,7 @@
             line-height: 1.1;
             letter-spacing: 1px;
         }
-        .section-title em {
-            font-style: italic;
-            font-weight: 300;
-            color: #444;
-        }
+        .section-title em { font-style: italic; font-weight: 300; color: #444; }
         .section-sub {
             font-size: 12px;
             color: var(--grey);
@@ -117,10 +105,7 @@
             margin-bottom: 40px;
             font-weight: 300;
         }
-        .input-group {
-            position: relative;
-            margin-bottom: 32px;
-        }
+        .input-group { position: relative; margin-bottom: 32px; }
         .input-group label {
             position: absolute;
             top: 10px;
@@ -161,18 +146,15 @@
         .input-group::after {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
             background: var(--black);
             transition: width 0.3s ease;
         }
         .input-group:focus-within::after { width: 100%; }
         .input-group .check {
             position: absolute;
-            right: 0;
-            top: 10px;
+            right: 0; top: 10px;
             font-size: 14px;
             color: var(--green-light);
             opacity: 0;
@@ -181,8 +163,7 @@
         .input-group input.valid-field ~ .check { opacity: 1; }
         .input-group .eye-toggle {
             position: absolute;
-            right: 0;
-            top: 10px;
+            right: 0; top: 10px;
             cursor: pointer;
             font-size: 14px;
             color: var(--grey);
@@ -199,68 +180,23 @@
             font-weight: 300;
         }
         .field-error.show { display: block; }
-        .strength-bar {
-            height: 1px;
-            background: var(--grey-light);
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .strength-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s ease, background 0.3s ease;
-        }
-        .strength-label {
-            font-size: 9px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--grey);
-            margin-top: 4px;
-            font-weight: 300;
-        }
-        .terms-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 28px;
-            cursor: pointer;
-        }
+        .strength-bar { height: 1px; background: var(--grey-light); margin-top: 10px; overflow: hidden; }
+        .strength-fill { height: 100%; width: 0%; transition: width 0.3s ease, background 0.3s ease; }
+        .strength-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--grey); margin-top: 4px; font-weight: 300; }
+        .terms-group { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 28px; cursor: pointer; }
         .custom-checkbox {
-            width: 16px;
-            height: 16px;
+            width: 16px; height: 16px;
             border: 1px solid var(--grey-light);
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
             margin-top: 2px;
         }
-        .custom-checkbox.checked {
-            background: var(--black);
-            border-color: var(--black);
-        }
-        .custom-checkbox svg {
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .custom-checkbox.checked svg {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .terms-text {
-            font-size: 12px;
-            color: var(--grey);
-            line-height: 1.7;
-            font-weight: 300;
-        }
-        .terms-text a {
-            color: var(--black);
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        #terms-checkbox { display: none; }
+        .custom-checkbox.checked { background: var(--black); border-color: var(--black); }
+        .custom-checkbox svg { opacity: 0; transform: scale(0); transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+        .custom-checkbox.checked svg { opacity: 1; transform: scale(1); }
+        .terms-text { font-size: 12px; color: var(--grey); line-height: 1.7; font-weight: 300; }
+        .terms-text a { color: var(--black); text-decoration: underline; cursor: pointer; }
         .btn {
             width: 100%;
             background: var(--black);
@@ -285,17 +221,14 @@
         .btn.success-state { background: var(--green); }
         .btn-dots {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             opacity: 0;
-            display: flex;
-            gap: 6px;
+            display: flex; gap: 6px;
             transition: opacity 0.2s;
         }
         .btn-dots span {
-            width: 4px;
-            height: 4px;
+            width: 4px; height: 4px;
             background: var(--white);
             border-radius: 50%;
             animation: dotPulse 1.2s ease-in-out infinite;
@@ -310,9 +243,7 @@
             margin-top: 28px;
             font-size: 11px;
             color: var(--grey);
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            display: flex; flex-wrap: wrap; gap: 20px;
             letter-spacing: 1px;
         }
         .toggle-links a {
@@ -323,67 +254,30 @@
             transition: all 0.2s ease;
             padding-bottom: 1px;
         }
-        .toggle-links a:hover {
-            color: var(--black);
-            border-bottom-color: var(--black);
-        }
-        .timer-wrap {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 20px 0;
-        }
-        .timer-circle-wrap {
-            position: relative;
-            width: 52px;
-            height: 52px;
-        }
+        .toggle-links a:hover { color: var(--black); border-bottom-color: var(--black); }
+        .timer-wrap { display: flex; align-items: center; gap: 16px; margin: 20px 0; }
+        .timer-circle-wrap { position: relative; width: 52px; height: 52px; }
         .timer-circle-wrap svg { transform: rotate(-90deg); }
         .timer-circle-bg { fill: none; stroke: var(--grey-light); stroke-width: 2; }
         .timer-circle-fill {
-            fill: none;
-            stroke: var(--black);
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-dasharray: 138;
-            stroke-dashoffset: 0;
+            fill: none; stroke: var(--black); stroke-width: 2;
+            stroke-linecap: round; stroke-dasharray: 138; stroke-dashoffset: 0;
             transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
         }
         .timer-number {
-            position: absolute;
-            top: 50%;
-            left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 14px;
             font-family: 'Cormorant Garamond', serif;
             font-weight: 400;
         }
-        .timer-text {
-            font-size: 12px;
-            color: var(--grey);
-            line-height: 1.7;
-            font-weight: 300;
-        }
-        .attempts-left {
-            font-size: 10px;
-            color: var(--grey);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 8px;
-            font-weight: 300;
-        }
-        .divider {
-            height: 1px;
-            background: var(--grey-light);
-            margin: 32px 0;
-        }
+        .timer-text { font-size: 12px; color: var(--grey); line-height: 1.7; font-weight: 300; }
+        .attempts-left { font-size: 10px; color: var(--grey); letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; font-weight: 300; }
+        .divider { height: 1px; background: var(--grey-light); margin: 32px 0; }
         .brand-footer {
             width: 100%;
             text-align: center;
             padding: 28px;
-            font-size: 9px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
             color: var(--grey);
             border-top: 1px solid var(--grey-light);
             margin-top: auto;
@@ -425,6 +319,7 @@
 
 <div class="container">
 
+    <!-- LOGIN -->
     <div id="login-section" class="form-section active">
         <div class="section-title">Welcome<br><em>back.</em></div>
         <div class="section-sub">Sign in to your account</div>
@@ -439,9 +334,7 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
-
-             <div id="login-recaptcha" style="margin-bottom:16px;"></div>
-
+            <div id="login-recaptcha" style="margin-bottom:16px;"></div>
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -453,225 +346,122 @@
         </div>
     </div>
 
-<div id="register-section" class="form-section">
-    <div class="section-title">Create<br><em>account.</em></div>
-    <div class="section-sub">Join CJ M-Banking today</div>
-    <form id="register-form" onsubmit="return handleRegister(event)">
-
-        <!-- USERNAME -->
-        <div class="input-group">
-            <input type="text" name="username" id="reg-username" placeholder=" " required>
-            <label>Username</label>
-            <span class="check">✓</span>
-        </div>
-
-        <!-- EMAIL -->
-        <div class="input-group">
-            <input type="email" name="email" id="reg-email" placeholder=" " required>
-            <label>Email address</label>
-            <span class="check">✓</span>
-        </div>
-
-        <!-- FIRST NAME -->
-        <div class="input-group">
-            <input type="text" name="first_name" id="reg-firstname" placeholder=" " required>
-            <label>First name (as on ID)</label>
-            <span class="check">✓</span>
-        </div>
-
-        <!-- SURNAME -->
-        <div class="input-group">
-            <input type="text" name="surname" id="reg-surname" placeholder=" " required>
-            <label>Surname (as on ID)</label>
-            <span class="check">✓</span>
-        </div>
-
-        <!-- ID NUMBER -->
-        <div class="input-group">
-            <input type="text" name="id_number" id="reg-idnumber" placeholder=" "
-                   maxlength="14" required oninput="this.value=this.value.replace(/\D/g,'')">
-            <label>National ID / Maisha Card number</label>
-            <span class="check">✓</span>
-            <div class="field-error" id="id-error">Must be 8, 9, or 14 digits</div>
-        </div>
-
-        <!-- DATE OF BIRTH -->
-        <div class="input-group">
-            <input type="date" name="dob" id="reg-dob" placeholder=" " required
-                   max="" oninput="checkAge()">
-            <label style="top:-16px; font-size:9px; letter-spacing:3px;">Date of birth</label>
-            <div class="field-error" id="dob-error">You must be at least 18 years old</div>
-            <div class="field-error" id="age-display" style="color: var(--green-light); display:none;"></div>
-        </div>
-
-        <!-- PHONE — Kenya +254 prefix -->
-        <div class="input-group">
-            <div style="display:flex; align-items:center; border-bottom:1px solid var(--grey-light); padding: 10px 0;">
-                <span style="font-size:14px; margin-right:8px; flex-shrink:0;">🇰🇪 +254</span>
-                <input type="tel" name="phone" id="reg-phone" placeholder="7XXXXXXXX"
-                       maxlength="9" style="border:none; outline:none; background:transparent;
-                       font-family:'Outfit',sans-serif; font-size:16px; font-weight:300;
-                       color:var(--black); width:100%;"
-                       oninput="this.value=this.value.replace(/\D/g,'')" required>
+    <!-- REGISTER -->
+    <div id="register-section" class="form-section">
+        <div class="section-title">Create<br><em>account.</em></div>
+        <div class="section-sub">Join CJ M-Banking today</div>
+        <form id="register-form" onsubmit="return handleRegister(event)">
+            <div class="input-group">
+                <input type="text" name="username" id="reg-username" placeholder=" " required>
+                <label>Username</label>
+                <span class="check">✓</span>
             </div>
-            <div class="field-error" id="phone-error">Enter 9 digits after +254 (e.g. 712345678)</div>
-        </div>
-
-        <!-- PASSWORD -->
-        <div class="input-group">
-            <input type="password" name="password" id="reg-password" placeholder=" "
-                   required oninput="checkStrength(this.value)">
-            <label>Password</label>
-            <span class="eye-toggle" onclick="togglePassword('reg-password', this)">👁</span>
-            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-            <div class="strength-label" id="strength-label"></div>
-            <div style="font-size:10px; color:var(--grey); margin-top:6px; letter-spacing:0.5px;">
-                Must have 8+ characters, uppercase, number and symbol
+            <div class="input-group">
+                <input type="email" name="email" id="reg-email" placeholder=" " required>
+                <label>Email address</label>
+                <span class="check">✓</span>
             </div>
-        </div>
-
-        <!-- CONFIRM PASSWORD -->
-        <div class="input-group">
-            <input type="password" name="confirm_password" id="reg-confirm" placeholder=" "
-                   required oninput="checkConfirm()">
-            <label>Confirm password</label>
-            <span class="eye-toggle" onclick="togglePassword('reg-confirm', this)">👁</span>
-            <div class="field-error" id="confirm-error">Passwords do not match</div>
-        </div>
-
-        <!-- TERMS -->
-        <label class="terms-group" onclick="openTermsModal()">
-            <input type="checkbox" id="terms-checkbox" name="terms_accepted" style="display:none">
-            <div class="custom-checkbox" id="terms-box">
-                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
-                    <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5"
-                          stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+            <div class="input-group">
+                <input type="text" name="first_name" id="reg-firstname" placeholder=" " required>
+                <label>First name (as on ID)</label>
+                <span class="check">✓</span>
             </div>
-            <div class="terms-text">
-                I have read and agree to the <a onclick="event.stopPropagation(); openTermsModal()">
-                Terms & Conditions</a> and <a onclick="event.stopPropagation(); openTermsModal()">Privacy Policy</a>
+            <div class="input-group">
+                <input type="text" name="surname" id="reg-surname" placeholder=" " required>
+                <label>Surname (as on ID)</label>
+                <span class="check">✓</span>
             </div>
-        </label>
-
-        <!-- RECAPTCHA -->
-
-           <div id="register-recaptcha" style="margin-bottom:16px;"></div>
-
-        <button type="submit" class="btn" id="register-btn">
-            <span class="btn-text">Create Account</span>
-            <div class="btn-dots"><span></span><span></span><span></span></div>
-        </button>
-    </form>
-    <div class="toggle-links">
-        <a onclick="switchForm('login-section')">Already have an account?</a>
-    </div>
-</div>
-
-<!-- VERIFY EMAIL SECTION -->
-<div id="verify-section" class="form-section">
-    <div class="section-title">Verify<br><em>email.</em></div>
-    <div class="section-sub">Enter the 6-digit code sent to your email</div>
-    <form id="verify-form" onsubmit="return handleVerify(event)">
-        <div class="input-group">
-            <input type="email" name="email" id="verify-email" placeholder=" " required>
-            <label>Email address</label>
-            <span class="check">✓</span>
-        </div>
-        <div class="input-group">
-            <input type="text" name="code" id="verify-code" placeholder=" "
-                   maxlength="6" required oninput="this.value=this.value.replace(/\D/g,'')">
-            <label>6-digit verification code</label>
-            <span class="check">✓</span>
-        </div>
-        <button type="submit" class="btn" id="verify-btn">
-            <span class="btn-text">Verify Email</span>
-            <div class="btn-dots"><span></span><span></span><span></span></div>
-        </button>
-    </form>
-    <div class="toggle-links">
-        <a onclick="switchForm('login-section')">Back to login</a>
-    </div>
-</div>
-
-<!-- TERMS MODAL -->
-<div id="terms-modal" style="
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7);
-    z-index:9999; align-items:center; justify-content:center; padding:24px;">
-    <div style="background:var(--white); max-width:480px; width:100%;
-                max-height:85vh; border-radius:4px; display:flex; flex-direction:column;">
-        <div style="padding:28px 28px 0;">
-            <div style="font-family:'Cormorant Garamond',serif; font-size:26px; margin-bottom:4px;">
-                Terms & Conditions
+            <div class="input-group">
+                <input type="text" name="id_number" id="reg-idnumber" placeholder=" "
+                       maxlength="14" required oninput="this.value=this.value.replace(/\D/g,'')">
+                <label>National ID / Maisha Card number</label>
+                <span class="check">✓</span>
+                <div class="field-error" id="id-error">Must be 8, 9, or 14 digits</div>
             </div>
-            <div style="font-size:10px; color:var(--grey); letter-spacing:3px;
-                        text-transform:uppercase; margin-bottom:20px;">
-                CJ M-Banking · Please read carefully
+            <div class="input-group">
+                <input type="date" name="dob" id="reg-dob" placeholder=" " required max="" oninput="checkAge()">
+                <label style="top:-16px; font-size:9px; letter-spacing:3px;">Date of birth</label>
+                <div class="field-error" id="dob-error">You must be at least 18 years old</div>
+                <div class="field-error" id="age-display" style="color:var(--green-light); display:none;"></div>
             </div>
-        </div>
-        <div style="overflow-y:auto; padding:0 28px; flex:1; font-size:13px;
-                    line-height:1.8; color:#444;">
-
-            <p style="margin-bottom:16px;"><strong>1. Eligibility</strong><br>
-            You must be at least 18 years of age and a Kenyan citizen or resident to open
-            an account with CJ M-Banking. By registering, you confirm that all information
-            provided is accurate and matches your official government-issued identification.</p>
-
-            <p style="margin-bottom:16px;"><strong>2. Account Responsibility</strong><br>
-            You are solely responsible for maintaining the confidentiality of your username
-            and password. Any activity conducted through your account is your responsibility.
-            CJ M-Banking will not be liable for losses arising from unauthorised access
-            caused by your failure to keep credentials secure.</p>
-
-            <p style="margin-bottom:16px;"><strong>3. Prohibited Activities</strong><br>
-            You agree not to use CJ M-Banking for money laundering, fraud, financing of
-            terrorism, or any activity that violates Kenyan law including the Proceeds of
-            Crime and Anti-Money Laundering Act. Violation will result in immediate account
-            suspension and reporting to relevant authorities.</p>
-
-            <p style="margin-bottom:16px;"><strong>4. Deposits & Withdrawals</strong><br>
-            All transactions are processed in Kenyan Shillings (KES). CJ M-Banking reserves
-            the right to place holds on suspicious transactions pending verification.
-            Minimum transaction amounts may apply.</p>
-
-            <p style="margin-bottom:16px;"><strong>5. Privacy & Data</strong><br>
-            Your personal data including name, ID number, date of birth and phone number
-            is collected for KYC (Know Your Customer) compliance as required by the Central
-            Bank of Kenya. Your data will not be sold to third parties. We may share
-            information with regulatory authorities when required by law.</p>
-
-            <p style="margin-bottom:16px;"><strong>6. Account Suspension</strong><br>
-            CJ M-Banking reserves the right to suspend or close accounts that violate these
-            terms, show suspicious activity, or provide false registration information.
-            Funds in suspended accounts will be held pending investigation.</p>
-
-            <p style="margin-bottom:16px;"><strong>7. Amendments</strong><br>
-            These terms may be updated from time to time. Continued use of the service
-            after changes constitutes acceptance of the updated terms.</p>
-
-            <p style="margin-bottom:24px;"><strong>8. Governing Law</strong><br>
-            These terms are governed by the laws of the Republic of Kenya. Any disputes
-            shall be resolved under Kenyan jurisdiction.</p>
-        </div>
-        <div style="padding:20px 28px; border-top:1px solid var(--grey-light);
-                    display:flex; gap:12px;">
-            <button onclick="declineTerms()" style="
-                flex:1; padding:14px; background:none; border:1px solid var(--grey-light);
-                font-size:11px; letter-spacing:2px; text-transform:uppercase;
-                cursor:pointer; font-family:'Outfit',sans-serif; color:var(--grey);">
-                I Decline
+            <div class="input-group">
+                <div style="display:flex; align-items:center; border-bottom:1px solid var(--grey-light); padding:10px 0;">
+                    <span style="font-size:14px; margin-right:8px; flex-shrink:0;">🇰🇪 +254</span>
+                    <input type="tel" name="phone" id="reg-phone" placeholder="7XXXXXXXX"
+                           maxlength="9"
+                           style="border:none; outline:none; background:transparent; font-family:'Outfit',sans-serif; font-size:16px; font-weight:300; color:var(--black); width:100%;"
+                           oninput="this.value=this.value.replace(/\D/g,'')" required>
+                </div>
+                <div class="field-error" id="phone-error">Enter 9 digits after +254 (e.g. 712345678)</div>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" id="reg-password" placeholder=" "
+                       required oninput="checkStrength(this.value)">
+                <label>Password</label>
+                <span class="eye-toggle" onclick="togglePassword('reg-password', this)">👁</span>
+                <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+                <div class="strength-label" id="strength-label"></div>
+                <div style="font-size:10px; color:var(--grey); margin-top:6px;">Must have 8+ characters, uppercase, number and symbol</div>
+            </div>
+            <div class="input-group">
+                <input type="password" name="confirm_password" id="reg-confirm" placeholder=" "
+                       required oninput="checkConfirm()">
+                <label>Confirm password</label>
+                <span class="eye-toggle" onclick="togglePassword('reg-confirm', this)">👁</span>
+                <div class="field-error" id="confirm-error">Passwords do not match</div>
+            </div>
+            <label class="terms-group" onclick="openTermsModal()">
+                <input type="checkbox" id="terms-checkbox" name="terms_accepted" style="display:none">
+                <div class="custom-checkbox" id="terms-box">
+                    <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                        <path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="terms-text">
+                    I have read and agree to the
+                    <a onclick="event.stopPropagation(); openTermsModal()">Terms & Conditions</a>
+                    and
+                    <a onclick="event.stopPropagation(); openTermsModal()">Privacy Policy</a>
+                </div>
+            </label>
+            <div id="register-recaptcha" style="margin-bottom:16px;"></div>
+            <button type="submit" class="btn" id="register-btn">
+                <span class="btn-text">Create Account</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
             </button>
-            <button onclick="acceptTerms()" style="
-                flex:1; padding:14px; background:var(--black); color:var(--white);
-                border:none; font-size:11px; letter-spacing:2px; text-transform:uppercase;
-                cursor:pointer; font-family:'Outfit',sans-serif;">
-                I Accept
-            </button>
+        </form>
+        <div class="toggle-links">
+            <a onclick="switchForm('login-section')">Already have an account?</a>
         </div>
     </div>
-</div>
 
+    <!-- VERIFY EMAIL -->
+    <div id="verify-section" class="form-section">
+        <div class="section-title">Verify<br><em>email.</em></div>
+        <div class="section-sub">Enter the 6-digit code sent to your email</div>
+        <form id="verify-form" onsubmit="return handleVerify(event)">
+            <div class="input-group">
+                <input type="email" name="email" id="verify-email" placeholder=" " required>
+                <label>Email address</label>
+                <span class="check">✓</span>
+            </div>
+            <div class="input-group">
+                <input type="text" name="code" id="verify-code" placeholder=" "
+                       maxlength="6" required oninput="this.value=this.value.replace(/\D/g,'')">
+                <label>6-digit verification code</label>
+                <span class="check">✓</span>
+            </div>
+            <button type="submit" class="btn" id="verify-btn">
+                <span class="btn-text">Verify Email</span>
+                <div class="btn-dots"><span></span><span></span><span></span></div>
+            </button>
+        </form>
+        <div class="toggle-links">
+            <a onclick="switchForm('login-section')">Back to login</a>
+        </div>
+    </div>
 
+    <!-- FORGOT PASSWORD -->
     <div id="forgot-section" class="form-section">
         <div class="section-title">Forgot<br><em>password?</em></div>
         <div class="section-sub">We will send a code to your email</div>
@@ -716,6 +506,7 @@
         </div>
     </div>
 
+    <!-- RESET PASSWORD -->
     <div id="reset-section" class="form-section">
         <div class="section-title">Reset<br><em>password.</em></div>
         <div class="section-sub">Enter the code from your email</div>
@@ -754,45 +545,44 @@
 
 </div>
 
+<!-- TERMS MODAL -->
+<div id="terms-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; padding:24px;">
+    <div style="background:var(--white); max-width:480px; width:100%; max-height:85vh; border-radius:4px; display:flex; flex-direction:column;">
+        <div style="padding:28px 28px 0;">
+            <div style="font-family:'Cormorant Garamond',serif; font-size:26px; margin-bottom:4px;">Terms & Conditions</div>
+            <div style="font-size:10px; color:var(--grey); letter-spacing:3px; text-transform:uppercase; margin-bottom:20px;">CJ M-Banking · Please read carefully</div>
+        </div>
+        <div style="overflow-y:auto; padding:0 28px; flex:1; font-size:13px; line-height:1.8; color:#444;">
+            <p style="margin-bottom:16px;"><strong>1. Eligibility</strong><br>You must be at least 18 years of age and a Kenyan citizen or resident to open an account with CJ M-Banking. By registering, you confirm that all information provided is accurate and matches your official government-issued identification.</p>
+            <p style="margin-bottom:16px;"><strong>2. Account Responsibility</strong><br>You are solely responsible for maintaining the confidentiality of your username and password. Any activity conducted through your account is your responsibility. CJ M-Banking will not be liable for losses arising from unauthorised access caused by your failure to keep credentials secure.</p>
+            <p style="margin-bottom:16px;"><strong>3. Prohibited Activities</strong><br>You agree not to use CJ M-Banking for money laundering, fraud, financing of terrorism, or any activity that violates Kenyan law including the Proceeds of Crime and Anti-Money Laundering Act. Violation will result in immediate account suspension and reporting to relevant authorities.</p>
+            <p style="margin-bottom:16px;"><strong>4. Deposits & Withdrawals</strong><br>All transactions are processed in Kenyan Shillings (KES). CJ M-Banking reserves the right to place holds on suspicious transactions pending verification. Minimum transaction amounts may apply.</p>
+            <p style="margin-bottom:16px;"><strong>5. Privacy & Data</strong><br>Your personal data including name, ID number, date of birth and phone number is collected for KYC compliance as required by the Central Bank of Kenya. Your data will not be sold to third parties. We may share information with regulatory authorities when required by law.</p>
+            <p style="margin-bottom:16px;"><strong>6. Account Suspension</strong><br>CJ M-Banking reserves the right to suspend or close accounts that violate these terms, show suspicious activity, or provide false registration information. Funds in suspended accounts will be held pending investigation.</p>
+            <p style="margin-bottom:16px;"><strong>7. Amendments</strong><br>These terms may be updated from time to time. Continued use of the service after changes constitutes acceptance of the updated terms.</p>
+            <p style="margin-bottom:24px;"><strong>8. Governing Law</strong><br>These terms are governed by the laws of the Republic of Kenya. Any disputes shall be resolved under Kenyan jurisdiction.</p>
+        </div>
+        <div style="padding:20px 28px; border-top:1px solid var(--grey-light); display:flex; gap:12px;">
+            <button onclick="declineTerms()" style="flex:1; padding:14px; background:none; border:1px solid var(--grey-light); font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; font-family:'Outfit',sans-serif; color:var(--grey);">I Decline</button>
+            <button onclick="acceptTerms()" style="flex:1; padding:14px; background:var(--black); color:var(--white); border:none; font-size:11px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; font-family:'Outfit',sans-serif;">I Accept</button>
+        </div>
+    </div>
+</div>
+
 <div class="brand-footer">Save &middot; Invest &middot; Grow &mdash; CJ M-Banking 2025</div>
 
 <script>
-const BASE_URL = "https://bank-project-v2.onrender.com";
+    const BASE_URL = "https://bank-project-v2.onrender.com";
+    const RECAPTCHA_SITE_KEY = "6LdBpP8sAAAAO1Zj75Ti0PrKDoAXe19w7Ps690C";
 
-let loginCaptchaId = null;
-let registerCaptchaId = null;
+    var loginCaptchaId = null;
+    var registerCaptchaId = null;
 
-window.onload = function () {
-
-    if (typeof grecaptcha !== "undefined") {
-
-        loginCaptchaId = grecaptcha.render('login-recaptcha', {
-            sitekey: '6LdBpP8sAAAAAO1Zj75Ti0PrKDoAXe19w7Ps690C'
-        });
-
-        registerCaptchaId = grecaptcha.render('register-recaptcha', {
-            sitekey: '6LdBpP8sAAAAAO1Zj75Ti0PrKDoAXe19w7Ps690C'
-        });
-
-    } else {
-        console.error("reCAPTCHA failed to load.");
+    function initCaptcha() {
+        loginCaptchaId = grecaptcha.render('login-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
+        registerCaptchaId = grecaptcha.render('register-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
     }
-};window.onload = function () {
 
-    if (typeof grecaptcha !== "undefined") {
-
-        loginCaptchaId = grecaptcha.render('login-recaptcha', {
-            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
-        });
-
-        registerCaptchaId = grecaptcha.render('register-recaptcha', {
-            sitekey: '6LfClf0sAAAAAH0VRYiB0PQQj-djQpZsHdpMvT1b'
-        });
-
-    } else {
-        console.error("reCAPTCHA failed to load.");
-    }
-};
     function showToast(message, type, duration) {
         duration = duration || 4000;
         var toast = document.getElementById('toast');
@@ -802,9 +592,7 @@ window.onload = function () {
     }
 
     function switchForm(sectionId) {
-        document.querySelectorAll('.form-section').forEach(function(s) {
-            s.classList.remove('active');
-        });
+        document.querySelectorAll('.form-section').forEach(function(s) { s.classList.remove('active'); });
         document.getElementById(sectionId).classList.add('active');
         if (sectionId === 'reset-section') {
             var forgotEmail = document.getElementById('forgot-email').value;
@@ -818,13 +606,8 @@ window.onload = function () {
 
     function togglePassword(inputId, icon) {
         var input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.textContent = '🙈';
-        } else {
-            input.type = 'password';
-            icon.textContent = '👁';
-        }
+        if (input.type === 'password') { input.type = 'text'; icon.textContent = '🙈'; }
+        else { input.type = 'password'; icon.textContent = '👁'; }
     }
 
     function checkStrength(val) {
@@ -856,32 +639,37 @@ window.onload = function () {
         var err = document.getElementById('confirm-error');
         var input = document.getElementById('reg-confirm');
         if (confirm && pass !== confirm) {
-            err.classList.add('show');
-            input.classList.add('error-field');
-            input.classList.remove('valid-field');
+            err.classList.add('show'); input.classList.add('error-field'); input.classList.remove('valid-field');
         } else if (confirm && pass === confirm) {
-            err.classList.remove('show');
-            input.classList.remove('error-field');
-            input.classList.add('valid-field');
+            err.classList.remove('show'); input.classList.remove('error-field'); input.classList.add('valid-field');
         }
     }
 
-    function toggleTerms() {
-        var box = document.getElementById('terms-box');
-        var checkbox = document.getElementById('terms-checkbox');
-        checkbox.checked = !checkbox.checked;
-        box.classList.toggle('checked', checkbox.checked);
+    function checkAge() {
+        var dob = document.getElementById('reg-dob').value;
+        var dobError = document.getElementById('dob-error');
+        var ageDisplay = document.getElementById('age-display');
+        var input = document.getElementById('reg-dob');
+        if (!dob) return;
+        var today = new Date();
+        var birthDate = new Date(dob);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+        if (age < 18) {
+            dobError.classList.add('show'); ageDisplay.style.display = 'none';
+            input.classList.add('error-field'); input.classList.remove('valid-field');
+        } else {
+            dobError.classList.remove('show'); ageDisplay.style.display = 'block';
+            ageDisplay.textContent = 'Age: ' + age + ' years ✓';
+            input.classList.remove('error-field'); input.classList.add('valid-field');
+        }
     }
 
     function setLoading(btnId, loading) {
         var btn = document.getElementById(btnId);
-        if (loading) {
-            btn.classList.add('loading');
-            btn.disabled = true;
-        } else {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-        }
+        if (loading) { btn.classList.add('loading'); btn.disabled = true; }
+        else { btn.classList.remove('loading'); btn.disabled = false; }
     }
 
     function setSuccess(btnId, text) {
@@ -889,6 +677,36 @@ window.onload = function () {
         btn.classList.add('success-state');
         btn.classList.remove('loading');
         btn.querySelector('.btn-text').textContent = text;
+    }
+
+    function markValid(inputId) {
+        var el = document.getElementById(inputId);
+        el.classList.add('valid-field'); el.classList.remove('error-field');
+    }
+
+    function markError(inputId) {
+        var el = document.getElementById(inputId);
+        el.classList.add('error-field'); el.classList.remove('valid-field');
+    }
+
+    function openTermsModal() { document.getElementById('terms-modal').style.display = 'flex'; }
+
+    function acceptTerms() {
+        document.getElementById('terms-modal').style.display = 'none';
+        document.getElementById('terms-checkbox').checked = true;
+        document.getElementById('terms-box').classList.add('checked');
+    }
+
+    function declineTerms() {
+        document.getElementById('terms-modal').style.display = 'none';
+        document.getElementById('terms-checkbox').checked = false;
+        document.getElementById('terms-box').classList.remove('checked');
+        document.getElementById('register-form').reset();
+        document.getElementById('terms-box').classList.remove('checked');
+        document.getElementById('strength-fill').style.width = '0%';
+        document.getElementById('strength-label').textContent = '';
+        document.getElementById('age-display').style.display = 'none';
+        showToast('You must accept the terms to register.', 'error');
     }
 
     var timerInterval = null;
@@ -930,143 +748,125 @@ window.onload = function () {
             el.style.color = '#ef4444';
             resendBtn.disabled = true;
             resendBtn.querySelector('.btn-text').textContent = 'Contact Support';
-            resendBtn.onclick = function() {
-                window.location.href = 'mailto:support@cjmbanking.com';
-            };
+            resendBtn.onclick = function() { window.location.href = 'mailto:support@cjmbanking.com'; };
         } else {
             el.textContent = remaining + ' attempt' + (remaining !== 1 ? 's' : '') + ' remaining';
         }
     }
 
-    function markValid(inputId) {
-        var el = document.getElementById(inputId);
-        el.classList.add('valid-field');
-        el.classList.remove('error-field');
-    }
-
-    function markError(inputId) {
-        var el = document.getElementById(inputId);
-        el.classList.add('error-field');
-        el.classList.remove('valid-field');
-    }
-
-
-async function handleLogin(event) {
-    event.preventDefault();
-
-if (typeof grecaptcha === 'undefined' || loginCaptchaId === null) {
-    showToast('reCAPTCHA failed to load.', 'error');
-    return;
-}
-
-var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
-
-if (!recaptchaResponse) {
-    showToast('Please complete the reCAPTCHA.', 'error');
-    return;
-}
-
-    setLoading('login-btn', true);
-    var formData = new FormData(event.target);
-    formData.append('recaptcha_token', recaptchaResponse);
-
-    try {
-        var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
-        var data = await response.json();
-
-        if (response.ok) {
-            localStorage.setItem('cj_token', data.token);
-            localStorage.setItem('cj_user', JSON.stringify(data.user));
-            localStorage.setItem('cj_user_email', data.user.email);
-            setSuccess('login-btn', 'Welcome back');
-            showToast('Welcome back, ' + data.user.username + '!', 'success');
-            setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
-
-        } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
+    async function handleLogin(event) {
+        event.preventDefault();
+        if (loginCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
+        var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
+        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
+        setLoading('login-btn', true);
+        var formData = new FormData(event.target);
+        formData.append('recaptcha_token', recaptchaResponse);
+        try {
+            var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('cj_token', data.token);
+                localStorage.setItem('cj_user', JSON.stringify(data.user));
+                localStorage.setItem('cj_user_email', data.user.email);
+                setSuccess('login-btn', 'Welcome back');
+                showToast('Welcome back, ' + data.user.username + '!', 'success');
+                setTimeout(function() { window.location.href = '/dashboard'; }, 1200);
+            } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
+                setLoading('login-btn', false);
+                showToast('Please verify your email before logging in.', 'error');
+                grecaptcha.reset(loginCaptchaId);
+            } else {
+                setLoading('login-btn', false);
+                showToast(data.detail || 'Login failed', 'error');
+                markError('login-username');
+                markError('login-password');
+                grecaptcha.reset(loginCaptchaId);
+            }
+        } catch(err) {
             setLoading('login-btn', false);
-            showToast('Please verify your email before logging in.', 'error');
+            showToast('Cannot reach server. Check your connection.', 'error');
             grecaptcha.reset(loginCaptchaId);
-        } else {
-            setLoading('login-btn', false);
-            showToast(data.detail || 'Login failed', 'error');
-            markError('login-username');
-            markError('login-password');
-            grecaptcha.reset(loginCaptchaId);        
-}
-    } catch(err) {
-        setLoading('login-btn', false);
-        showToast('Cannot reach server. Check your connection.', 'error');
-        grecaptcha.reset(loginCaptchaId);  
-  }
-}
+        }
+    }
 
-async function handleRegister(event) {
-    event.preventDefault();
-
-if (typeof grecaptcha === 'undefined' || registerCaptchaId === null) {
-    showToast('reCAPTCHA failed to load.', 'error');
-    return;
-}
-
-var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
-
-if (!recaptchaResponse) {
-    showToast('Please complete the reCAPTCHA.', 'error');
-    return;
-}
-    var pass = document.getElementById('reg-password').value;
-    var confirm = document.getElementById('reg-confirm').value;
-    var terms = document.getElementById('terms-checkbox').checked;
-    var phone = document.getElementById('reg-phone').value;
-    var idNumber = document.getElementById('reg-idnumber').value;
-    var dob = document.getElementById('reg-dob').value;
-
-    if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
-    if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
-    if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
-    if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
-
-    // Age check
-    var birthDate = new Date(dob);
-    var today = new Date();
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-    if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
-
-    setLoading('register-btn', true);
-    var formData = new FormData(event.target);
-    formData.set('terms_accepted', 'true');
-    formData.set('phone', '+254' + phone);
-    formData.append('recaptcha_token', recaptchaResponse);
-
-    try {
-        var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
-        var data = await response.json();
-        if (response.ok) {
-            setSuccess('register-btn', 'Account Created');
-            showToast('Account created! Check your email for a verification code.', 'success');
-            setTimeout(function() {
+    async function handleRegister(event) {
+        event.preventDefault();
+        if (registerCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
+        var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
+        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
+        var pass = document.getElementById('reg-password').value;
+        var confirm = document.getElementById('reg-confirm').value;
+        var terms = document.getElementById('terms-checkbox').checked;
+        var phone = document.getElementById('reg-phone').value;
+        var idNumber = document.getElementById('reg-idnumber').value;
+        var dob = document.getElementById('reg-dob').value;
+        if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
+        if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
+        if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
+        if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
+        var birthDate = new Date(dob);
+        var today = new Date();
+        var age = today.getFullYear() - birthDate.getFullYear();
+        var m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+        if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
+        setLoading('register-btn', true);
+        var formData = new FormData(event.target);
+        formData.set('terms_accepted', 'true');
+        formData.set('phone', '+254' + phone);
+        formData.append('recaptcha_token', recaptchaResponse);
+        try {
+            var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('register-btn', 'Account Created');
+                showToast('Account created! Check your email for a verification code.', 'success');
+                setTimeout(function() {
+                    setLoading('register-btn', false);
+                    document.getElementById('register-btn').classList.remove('success-state');
+                    document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
+                    grecaptcha.reset(registerCaptchaId);
+                    document.getElementById('verify-email').value = data.email || '';
+                    switchForm('verify-section');
+                }, 1500);
+            } else {
                 setLoading('register-btn', false);
-                document.getElementById('register-btn').classList.remove('success-state');
-                document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
-
-               grecaptcha.reset(registerCaptchaId);
-
-                // Pre-fill email in verify section
-                document.getElementById('verify-email').value = data.email || '';
-                switchForm('verify-section');
-            }, 1500);
-        } else {
+                showToast(data.detail || 'Registration failed', 'error');
+                grecaptcha.reset(registerCaptchaId);
+            }
+        } catch(err) {
             setLoading('register-btn', false);
-            showToast(data.detail || 'Registration failed', 'error');
-            grecaptcha.reset(registerCaptchaId);        }
-    } catch(err) {
-        setLoading('register-btn', false);
-        showToast('Cannot reach server. Check your connection.', 'error');
-         grecaptcha.reset(registerCaptchaId);    }
-}
+            showToast('Cannot reach server. Check your connection.', 'error');
+            grecaptcha.reset(registerCaptchaId);
+        }
+    }
 
+    async function handleVerify(event) {
+        event.preventDefault();
+        setLoading('verify-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/verify-email', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('verify-btn', 'Verified!');
+                showToast('Email verified! You can now log in.', 'success');
+                setTimeout(function() {
+                    setLoading('verify-btn', false);
+                    document.getElementById('verify-btn').classList.remove('success-state');
+                    document.getElementById('verify-btn').querySelector('.btn-text').textContent = 'Verify Email';
+                    switchForm('login-section');
+                }, 1500);
+            } else {
+                setLoading('verify-btn', false);
+                showToast(data.detail || 'Verification failed', 'error');
+            }
+        } catch(err) {
+            setLoading('verify-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
 
     async function handleForgot(event) {
         event.preventDefault();
@@ -1147,6 +947,11 @@ if (!recaptchaResponse) {
         }
     }
 
+    document.addEventListener('DOMContentLoaded', function() {
+        var today = new Date().toISOString().split('T')[0];
+        document.getElementById('reg-dob').setAttribute('max', today);
+    });
+
     document.querySelectorAll('input[type="email"]').forEach(function(input) {
         input.addEventListener('input', function() {
             if (input.validity.valid) markValid(input.id);
@@ -1156,14 +961,8 @@ if (!recaptchaResponse) {
 
     document.getElementById('reg-phone').addEventListener('blur', function() {
         var val = this.value;
-        if (/^\d{9}$/.test(val)) {
-
-            markValid('reg-phone');
-            document.getElementById('phone-error').classList.remove('show');
-        } else if (val) {
-            markError('reg-phone');
-            document.getElementById('phone-error').classList.add('show');
-        }
+        if (/^\d{9}$/.test(val)) { markValid('reg-phone'); document.getElementById('phone-error').classList.remove('show'); }
+        else if (val) { markError('reg-phone'); document.getElementById('phone-error').classList.add('show'); }
     });
 
     document.getElementById('reg-username').addEventListener('input', function() {
@@ -1174,111 +973,12 @@ if (!recaptchaResponse) {
         this.classList.remove('error-field', 'valid-field');
     });
 
-// ── AGE CHECK ─────────────────────────────────────────────────────────────────
-function checkAge() {
-    var dob = document.getElementById('reg-dob').value;
-    var dobError = document.getElementById('dob-error');
-    var ageDisplay = document.getElementById('age-display');
-    var input = document.getElementById('reg-dob');
-
-    if (!dob) return;
-
-    var today = new Date();
-    var birthDate = new Date(dob);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-
-    if (age < 18) {
-        dobError.classList.add('show');
-        ageDisplay.style.display = 'none';
-        input.classList.add('error-field');
-        input.classList.remove('valid-field');
-    } else {
-        dobError.classList.remove('show');
-        ageDisplay.style.display = 'block';
-        ageDisplay.textContent = 'Age: ' + age + ' years ✓';
-        input.classList.remove('error-field');
-        input.classList.add('valid-field');
-    }
-}
-
-// Set max date on DOB to today
-document.addEventListener('DOMContentLoaded', function() {
-    var today = new Date().toISOString().split('T')[0];
-    document.getElementById('reg-dob').setAttribute('max', today);
-});
-
-// ── ID NUMBER VALIDATION ──────────────────────────────────────────────────────
-document.getElementById('reg-idnumber').addEventListener('blur', function() {
-    var val = this.value;
-    var err = document.getElementById('id-error');
-    if (val && [8, 9, 14].includes(val.length)) {
-        markValid('reg-idnumber');
-        err.classList.remove('show');
-    } else if (val) {
-        markError('reg-idnumber');
-        err.classList.add('show');
-    }
-});
-
-// ── TERMS MODAL ───────────────────────────────────────────────────────────────
-function openTermsModal() {
-    document.getElementById('terms-modal').style.display = 'flex';
-}
-
-function acceptTerms() {
-    document.getElementById('terms-modal').style.display = 'none';
-    document.getElementById('terms-checkbox').checked = true;
-    document.getElementById('terms-box').classList.add('checked');
-}
-
-function declineTerms() {
-    document.getElementById('terms-modal').style.display = 'none';
-    document.getElementById('terms-checkbox').checked = false;
-    document.getElementById('terms-box').classList.remove('checked');
-    // Clear all registration fields
-    document.getElementById('register-form').reset();
-    document.getElementById('terms-box').classList.remove('checked');
-    document.getElementById('strength-fill').style.width = '0%';
-    document.getElementById('strength-label').textContent = '';
-    document.getElementById('age-display').style.display = 'none';
-    showToast('You must accept the terms to register.', 'error');
-}
-
-// ── EMAIL VERIFICATION ────────────────────────────────────────────────────────
-async function handleVerify(event) {
-    event.preventDefault();
-    setLoading('verify-btn', true);
-    var formData = new FormData(event.target);
-    try {
-        var response = await fetch(BASE_URL + '/verify-email', { method: 'POST', body: formData });
-        var data = await response.json();
-        if (response.ok) {
-            setSuccess('verify-btn', 'Verified!');
-            showToast('Email verified! You can now log in.', 'success');
-            setTimeout(function() {
-                setLoading('verify-btn', false);
-                document.getElementById('verify-btn').classList.remove('success-state');
-                document.getElementById('verify-btn').querySelector('.btn-text').textContent = 'Verify Email';
-                switchForm('login-section');
-            }, 1500);
-        } else {
-            setLoading('verify-btn', false);
-            showToast(data.detail || 'Verification failed', 'error');
-        }
-    } catch(err) {
-        setLoading('verify-btn', false);
-        showToast('Cannot reach server.', 'error');
-    }
-}
-
-window.addEventListener('error', function(e) {
-    console.error('Global JS Error:', e.message);
-});
-
-
+    document.getElementById('reg-idnumber').addEventListener('blur', function() {
+        var val = this.value;
+        var err = document.getElementById('id-error');
+        if (val && [8, 9, 14].includes(val.length)) { markValid('reg-idnumber'); err.classList.remove('show'); }
+        else if (val) { markError('reg-idnumber'); err.classList.add('show'); }
+    });
 </script>
 </body>
 </html>
-
