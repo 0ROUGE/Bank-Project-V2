@@ -6,6 +6,7 @@
     <title>CJ M-BANKING</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js?onload=initCaptcha&render=explicit" async defer></script>
     <style>
         :root {
             --black: #0a0a0a;
@@ -293,11 +294,14 @@
     </style>
 </head>
 <body>
+
 <div class="toast" id="toast"></div>
+
 <header class="brand-header">
     <div class="brand-name">CJ M-Banking</div>
     <div class="brand-tag">Secure · Mobile · Smart</div>
 </header>
+
 <div class="logo-wrap">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="90" height="90">
         <circle cx="25" cy="35" r="12" fill="#0a0a0a"/>
@@ -312,7 +316,9 @@
         <circle cx="44" cy="75" r="3.5" fill="#0a0a0a"/>
     </svg>
 </div>
+
 <div class="container">
+
     <!-- LOGIN -->
     <div id="login-section" class="form-section active">
         <div class="section-title">Welcome<br><em>back.</em></div>
@@ -328,6 +334,7 @@
                 <label>Password</label>
                 <span class="eye-toggle" onclick="togglePassword('login-password', this)">👁</span>
             </div>
+            <div id="login-recaptcha" style="margin-bottom:16px;"></div>
             <button type="submit" class="btn" id="login-btn">
                 <span class="btn-text">Log In</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -417,6 +424,7 @@
                     <a onclick="event.stopPropagation(); openTermsModal()">Privacy Policy</a>
                 </div>
             </label>
+            <div id="register-recaptcha" style="margin-bottom:16px;"></div>
             <button type="submit" class="btn" id="register-btn">
                 <span class="btn-text">Create Account</span>
                 <div class="btn-dots"><span></span><span></span><span></span></div>
@@ -534,6 +542,7 @@
             <a onclick="switchForm('login-section')">Back to login</a>
         </div>
     </div>
+
 </div>
 
 <!-- TERMS MODAL -->
@@ -544,8 +553,13 @@
             <div style="font-size:10px; color:var(--grey); letter-spacing:3px; text-transform:uppercase; margin-bottom:20px;">CJ M-Banking · Please read carefully</div>
         </div>
         <div style="overflow-y:auto; padding:0 28px; flex:1; font-size:13px; line-height:1.8; color:#444;">
-            <p style="margin-bottom:16px;"><strong>1. Eligibility</strong><br>You must be at least 18 years of age and a Kenyan citizen or resident to open an account with CJ M-Banking...</p>
-            <!-- (Terms content remains unchanged) -->
+            <p style="margin-bottom:16px;"><strong>1. Eligibility</strong><br>You must be at least 18 years of age and a Kenyan citizen or resident to open an account with CJ M-Banking. By registering, you confirm that all information provided is accurate and matches your official government-issued identification.</p>
+            <p style="margin-bottom:16px;"><strong>2. Account Responsibility</strong><br>You are solely responsible for maintaining the confidentiality of your username and password. Any activity conducted through your account is your responsibility. CJ M-Banking will not be liable for losses arising from unauthorised access caused by your failure to keep credentials secure.</p>
+            <p style="margin-bottom:16px;"><strong>3. Prohibited Activities</strong><br>You agree not to use CJ M-Banking for money laundering, fraud, financing of terrorism, or any activity that violates Kenyan law including the Proceeds of Crime and Anti-Money Laundering Act. Violation will result in immediate account suspension and reporting to relevant authorities.</p>
+            <p style="margin-bottom:16px;"><strong>4. Deposits & Withdrawals</strong><br>All transactions are processed in Kenyan Shillings (KES). CJ M-Banking reserves the right to place holds on suspicious transactions pending verification. Minimum transaction amounts may apply.</p>
+            <p style="margin-bottom:16px;"><strong>5. Privacy & Data</strong><br>Your personal data including name, ID number, date of birth and phone number is collected for KYC compliance as required by the Central Bank of Kenya. Your data will not be sold to third parties. We may share information with regulatory authorities when required by law.</p>
+            <p style="margin-bottom:16px;"><strong>6. Account Suspension</strong><br>CJ M-Banking reserves the right to suspend or close accounts that violate these terms, show suspicious activity, or provide false registration information. Funds in suspended accounts will be held pending investigation.</p>
+            <p style="margin-bottom:16px;"><strong>7. Amendments</strong><br>These terms may be updated from time to time. Continued use of the service after changes constitutes acceptance of the updated terms.</p>
             <p style="margin-bottom:24px;"><strong>8. Governing Law</strong><br>These terms are governed by the laws of the Republic of Kenya. Any disputes shall be resolved under Kenyan jurisdiction.</p>
         </div>
         <div style="padding:20px 28px; border-top:1px solid var(--grey-light); display:flex; gap:12px;">
@@ -559,6 +573,15 @@
 
 <script>
     const BASE_URL = "https://bank-project-v2.onrender.com";
+    const RECAPTCHA_SITE_KEY = "6LdBpP8sAAAAO1Zj75Ti0PrKDoAXe19w7Ps690C";
+
+    var loginCaptchaId = null;
+    var registerCaptchaId = null;
+
+    function initCaptcha() {
+        loginCaptchaId = grecaptcha.render('login-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
+        registerCaptchaId = grecaptcha.render('register-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
+    }
 
     function showToast(message, type, duration) {
         duration = duration || 4000;
@@ -587,7 +610,6 @@
         else { input.type = 'password'; icon.textContent = '👁'; }
     }
 
-    // Rest of your JavaScript functions remain the same (only reCAPTCHA parts removed)
     function checkStrength(val) {
         var fill = document.getElementById('strength-fill');
         var label = document.getElementById('strength-label');
@@ -734,8 +756,12 @@
 
     async function handleLogin(event) {
         event.preventDefault();
+        if (loginCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
+        var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
+        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
         setLoading('login-btn', true);
         var formData = new FormData(event.target);
+        formData.append('recaptcha_token', recaptchaResponse);
         try {
             var response = await fetch(BASE_URL + '/login', { method: 'POST', body: formData });
             var data = await response.json();
@@ -749,44 +775,47 @@
             } else if (response.status === 403 && data.detail === 'EMAIL_NOT_VERIFIED') {
                 setLoading('login-btn', false);
                 showToast('Please verify your email before logging in.', 'error');
+                grecaptcha.reset(loginCaptchaId);
             } else {
                 setLoading('login-btn', false);
                 showToast(data.detail || 'Login failed', 'error');
                 markError('login-username');
                 markError('login-password');
+                grecaptcha.reset(loginCaptchaId);
             }
         } catch(err) {
             setLoading('login-btn', false);
             showToast('Cannot reach server. Check your connection.', 'error');
+            grecaptcha.reset(loginCaptchaId);
         }
     }
 
     async function handleRegister(event) {
         event.preventDefault();
+        if (registerCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
+        var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
+        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
         var pass = document.getElementById('reg-password').value;
         var confirm = document.getElementById('reg-confirm').value;
         var terms = document.getElementById('terms-checkbox').checked;
         var phone = document.getElementById('reg-phone').value;
         var idNumber = document.getElementById('reg-idnumber').value;
         var dob = document.getElementById('reg-dob').value;
-
         if (!terms) { showToast('Please read and accept the Terms & Conditions.', 'error'); return; }
         if (pass !== confirm) { document.getElementById('confirm-error').classList.add('show'); markError('reg-confirm'); return; }
         if (!/^\d{9}$/.test(phone)) { document.getElementById('phone-error').classList.add('show'); markError('reg-phone'); return; }
         if (![8,9,14].includes(idNumber.length)) { document.getElementById('id-error').classList.add('show'); markError('reg-idnumber'); return; }
-
         var birthDate = new Date(dob);
         var today = new Date();
         var age = today.getFullYear() - birthDate.getFullYear();
         var m = today.getMonth() - birthDate.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
         if (age < 18) { document.getElementById('dob-error').classList.add('show'); return; }
-
         setLoading('register-btn', true);
         var formData = new FormData(event.target);
         formData.set('terms_accepted', 'true');
         formData.set('phone', '+254' + phone);
-
+        formData.append('recaptcha_token', recaptchaResponse);
         try {
             var response = await fetch(BASE_URL + '/create-account', { method: 'POST', body: formData });
             var data = await response.json();
@@ -797,31 +826,132 @@
                     setLoading('register-btn', false);
                     document.getElementById('register-btn').classList.remove('success-state');
                     document.getElementById('register-btn').querySelector('.btn-text').textContent = 'Create Account';
+                    grecaptcha.reset(registerCaptchaId);
                     document.getElementById('verify-email').value = data.email || '';
                     switchForm('verify-section');
                 }, 1500);
             } else {
                 setLoading('register-btn', false);
                 showToast(data.detail || 'Registration failed', 'error');
+                grecaptcha.reset(registerCaptchaId);
             }
         } catch(err) {
             setLoading('register-btn', false);
             showToast('Cannot reach server. Check your connection.', 'error');
+            grecaptcha.reset(registerCaptchaId);
         }
     }
 
-    // Other functions (handleVerify, handleForgot, handleResend, handleReset) remain unchanged
-    async function handleVerify(event) { /* ... same as before ... */ }
-    async function handleForgot(event) { /* ... same as before ... */ }
-    async function handleResend() { /* ... same as before ... */ }
-    async function handleReset(event) { /* ... same as before ... */ }
+    async function handleVerify(event) {
+        event.preventDefault();
+        setLoading('verify-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/verify-email', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('verify-btn', 'Verified!');
+                showToast('Email verified! You can now log in.', 'success');
+                setTimeout(function() {
+                    setLoading('verify-btn', false);
+                    document.getElementById('verify-btn').classList.remove('success-state');
+                    document.getElementById('verify-btn').querySelector('.btn-text').textContent = 'Verify Email';
+                    switchForm('login-section');
+                }, 1500);
+            } else {
+                setLoading('verify-btn', false);
+                showToast(data.detail || 'Verification failed', 'error');
+            }
+        } catch(err) {
+            setLoading('verify-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    async function handleForgot(event) {
+        event.preventDefault();
+        setLoading('forgot-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/forgot-password', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setLoading('forgot-btn', false);
+                showToast('Recovery code sent! Check your inbox.', 'success');
+                updateAttempts();
+                startTimer();
+            } else {
+                setLoading('forgot-btn', false);
+                showToast(data.detail || 'Email not found', 'error');
+            }
+        } catch(err) {
+            setLoading('forgot-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    async function handleResend() {
+        setLoading('resend-btn', true);
+        var email = document.getElementById('forgot-email').value;
+        var formData = new FormData();
+        formData.append('email', email);
+        try {
+            var response = await fetch(BASE_URL + '/resend-code', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setLoading('resend-btn', false);
+                showToast('New code sent to your email.', 'success');
+                updateAttempts();
+                startTimer();
+            } else {
+                setLoading('resend-btn', false);
+                showToast(data.detail || 'Could not resend', 'error');
+            }
+        } catch(err) {
+            setLoading('resend-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
+
+    async function handleReset(event) {
+        event.preventDefault();
+        var newPass = document.getElementById('reset-new-pass').value;
+        var confirm = document.getElementById('reset-confirm').value;
+        if (newPass !== confirm) {
+            document.getElementById('reset-confirm-error').classList.add('show');
+            markError('reset-confirm');
+            return;
+        }
+        setLoading('reset-btn', true);
+        var formData = new FormData(event.target);
+        try {
+            var response = await fetch(BASE_URL + '/reset-password', { method: 'POST', body: formData });
+            var data = await response.json();
+            if (response.ok) {
+                setSuccess('reset-btn', 'Password Updated');
+                showToast('Password updated! Please log in.', 'success');
+                setTimeout(function() {
+                    event.target.reset();
+                    document.getElementById('reset-btn').classList.remove('success-state');
+                    document.getElementById('reset-btn').querySelector('.btn-text').textContent = 'Update Password';
+                    setLoading('reset-btn', false);
+                    switchForm('login-section');
+                }, 1500);
+            } else {
+                setLoading('reset-btn', false);
+                showToast(data.detail || 'Reset failed', 'error');
+            }
+        } catch(err) {
+            setLoading('reset-btn', false);
+            showToast('Cannot reach server.', 'error');
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         var today = new Date().toISOString().split('T')[0];
         document.getElementById('reg-dob').setAttribute('max', today);
     });
 
-    // Input validation listeners remain the same
     document.querySelectorAll('input[type="email"]').forEach(function(input) {
         input.addEventListener('input', function() {
             if (input.validity.valid) markValid(input.id);
