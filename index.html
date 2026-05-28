@@ -579,8 +579,7 @@
     var registerCaptchaId = null;
 
     function initCaptcha() {
-        loginCaptchaId = grecaptcha.render('login-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
-        registerCaptchaId = grecaptcha.render('register-recaptcha', { sitekey: RECAPTCHA_SITE_KEY });
+         // recaptcha temporarily disabled
     }
 
     function showToast(message, type, duration) {
@@ -756,10 +755,8 @@
 
     async function handleLogin(event) {
         event.preventDefault();
-        if (loginCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
-        var recaptchaResponse = grecaptcha.getResponse(loginCaptchaId);
-        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
-        setLoading('login-btn', true);
+        var recaptchaResponse = 'disabled';
+         setLoading('login-btn', true);
         var formData = new FormData(event.target);
         formData.append('recaptcha_token', recaptchaResponse);
         try {
@@ -792,9 +789,7 @@
 
     async function handleRegister(event) {
         event.preventDefault();
-        if (registerCaptchaId === null) { showToast('reCAPTCHA not loaded. Please refresh.', 'error'); return; }
-        var recaptchaResponse = grecaptcha.getResponse(registerCaptchaId);
-        if (!recaptchaResponse) { showToast('Please complete the reCAPTCHA first.', 'error'); return; }
+        var recaptchaResponse = 'disabled';
         var pass = document.getElementById('reg-password').value;
         var confirm = document.getElementById('reg-confirm').value;
         var terms = document.getElementById('terms-checkbox').checked;
